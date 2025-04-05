@@ -21,9 +21,7 @@ export default function ChronicConditionsScreen() {
   const [selectedConditions, setSelectedConditions] = useState<string[]>(
     data.chronicConditions || [],
   );
-  const [noConditions, setNoConditions] = useState<boolean>(
-    data.chronicConditions ? data.chronicConditions.length === 0 : true,
-  );
+  const [noConditions, setNoConditions] = useState<boolean>(false);
   const [otherConditionDetails, setOtherConditionDetails] = useState<string>(
     data.otherConditionDetails || "",
   );
