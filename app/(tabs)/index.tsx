@@ -1,22 +1,60 @@
 import { Redirect } from "expo-router";
-import { StyleSheet, View, ScrollView, Image } from "react-native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, View, StyleSheet, ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useOnboarding } from "@/app/context/onboarding-context";
+import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Colors } from "@/constants/Colors";
 
 export default function Index() {
-  const { data } = useOnboarding();
+  const { data, updateData } = useOnboarding();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOnboardingComplete, setIsOnboardingComplete] = useState(false);
 
-  // Check if onboarding is completed
-  const hasCompletedOnboarding = data.name !== "" && data.age !== null;
-  // Setting forceOnboarding to false to allow navigation to main app after completing onboarding
-  const forceOnboarding = false;
+  useEffect(() => {
+    // Load the data when the component mounts
+    const loadData = async () => {
+      try {
+        // Check if onboarding is complete
+        const onboardingComplete = await AsyncStorage.getItem(
+          "@safespace_onboarding_complete",
+        );
 
-  console.log("hasCompletedOnboarding", hasCompletedOnboarding);
+        if (onboardingComplete === "true") {
+          // Load the saved user data
+          const jsonValue = await AsyncStorage.getItem("@safespace_user_data");
 
-  if (hasCompletedOnboarding && !forceOnboarding) {
-    console.log("here1");
+          if (jsonValue) {
+            // Parse the JSON string back to an object
+            const savedData = JSON.parse(jsonValue);
+
+            // Update the context with the saved data
+            updateData(savedData);
+            setIsOnboardingComplete(true);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [updateData]);
+
+  // Show a loading indicator while we check storage
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Colors.light.tint} />
+      </View>
+    );
+  }
+
+  // After loading, check if we have data indicating onboarding is complete
+  if (isOnboardingComplete || (data.name !== "" && data.age !== null)) {
     // Display the user's data
     return (
       <ScrollView style={styles.container}>
@@ -133,7 +171,7 @@ export default function Index() {
       </ScrollView>
     );
   } else {
-    console.log("here2");
+    // Redirect to onboarding if no data
     return <Redirect href="/onboarding/welcome" />;
   }
 }
@@ -187,6 +225,11 @@ function getResultBadgeStyle(result) {
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     padding: 16,

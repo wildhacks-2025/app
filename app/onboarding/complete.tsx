@@ -1,25 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
   SafeAreaView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useRouter } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useOnboarding } from "../context/onboarding-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CompleteScreen() {
   const router = useRouter();
   const { data } = useOnboarding();
+  const [saving, setSaving] = useState(false);
 
-  const finishOnboarding = () => {
-    // In a real app, here you would save the onboarding data
-    // to persistent storage using @react-native-async-storage/async-storage
-    router.replace("/(tabs)");
+  const saveDataToStorage = async () => {
+    try {
+      setSaving(true);
+
+      // Convert data to a string
+      const jsonValue = JSON.stringify(data);
+
+      // Save to AsyncStorage
+      await AsyncStorage.setItem("@safespace_user_data", jsonValue);
+
+      // Also save a flag indicating onboarding is complete
+      await AsyncStorage.setItem("@safespace_onboarding_complete", "true");
+
+      console.log("Data saved successfully!");
+      return true;
+    } catch (error) {
+      console.error("Error saving data:", error);
+      Alert.alert(
+        "Storage Error",
+        "There was a problem saving your data. Please try again.",
+      );
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const finishOnboarding = async () => {
+    const success = await saveDataToStorage();
+    if (success) {
+      router.replace("/(tabs)");
+    }
   };
 
   return (
@@ -49,10 +81,15 @@ export default function CompleteScreen() {
             style={styles.button}
             onPress={finishOnboarding}
             activeOpacity={0.8}
+            disabled={saving}
           >
-            <ThemedText style={styles.buttonText}>
-              Start Using SafeSpace
-            </ThemedText>
+            {saving ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <ThemedText style={styles.buttonText}>
+                Start Using SafeSpace
+              </ThemedText>
+            )}
           </TouchableOpacity>
         </View>
       </ThemedView>
