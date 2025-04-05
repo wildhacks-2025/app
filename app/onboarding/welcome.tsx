@@ -1,11 +1,15 @@
 import React from "react";
-import { StyleSheet, View, SafeAreaView, Image } from "react-native";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import { useRouter } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
-
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function WelcomeScreen() {
   const router = useRouter();
