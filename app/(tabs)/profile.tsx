@@ -1,3 +1,3 @@
-import { StyleSheet, Image, Platform } from "react-native";
+import { Image, Platform, StyleSheet } from 'react-native';
 
 export default function ProfilePage() {}
