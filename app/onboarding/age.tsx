@@ -7,11 +7,9 @@ import { useOnboarding } from "../context/onboarding-context";
 export default function AgeScreen() {
   const { data, updateData } = useOnboarding();
 
-  // Initialize with current date minus 18 years as default
   const defaultDate = new Date();
   defaultDate.setFullYear(defaultDate.getFullYear() - 18);
 
-  // Use stored birthdate or default
   const [birthdate, setBirthdate] = useState(
     data.birthdate ? new Date(data.birthdate) : defaultDate,
   );
