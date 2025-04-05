@@ -1,0 +1,115 @@
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
+import { useRouter } from "expo-router";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Colors } from "@/constants/Colors";
+import { useOnboarding } from "../context/onboarding-context";
+
+export default function CompleteScreen() {
+  const router = useRouter();
+  const { data } = useOnboarding();
+
+  const finishOnboarding = () => {
+    // In a real app, here you would save the onboarding data
+    // to persistent storage using @react-native-async-storage/async-storage
+    router.replace("/(tabs)");
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <ThemedView style={styles.container}>
+        <View style={styles.iconContainer}>
+          <Image
+            source={require("../../assets/images/icon.png")}
+            style={styles.icon}
+            resizeMode="contain"
+          />
+        </View>
+
+        <View style={styles.contentContainer}>
+          <ThemedText style={styles.title}>All Set, {data.name}!</ThemedText>
+          <ThemedText style={styles.description}>
+            Thank you for sharing your information. Your data is securely stored
+            on your device.
+          </ThemedText>
+          <ThemedText style={styles.privacyNote}>
+            Your health. Your privacy. Your journey.
+          </ThemedText>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={finishOnboarding}
+            activeOpacity={0.8}
+          >
+            <ThemedText style={styles.buttonText}>
+              Start Using SafeSpace
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
+      </ThemedView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  iconContainer: {
+    alignItems: "center",
+    marginTop: 40,
+  },
+  icon: {
+    width: 100,
+    height: 100,
+  },
+  contentContainer: {
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  description: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 15,
+  },
+  privacyNote: {
+    fontSize: 18,
+    fontWeight: "600",
+    textAlign: "center",
+    color: Colors.light.tint,
+  },
+  buttonContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 40,
+  },
+  button: {
+    backgroundColor: Colors.light.tint,
+    width: "80%",
+    paddingVertical: 16,
+    borderRadius: 30,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600",
+  },
+});

@@ -16,7 +16,11 @@ wildhacks 2025 wellness track project
 - their age
 - sex
 - last time sti/std tested
-- current medications/contraceptives
+  - ask which test they got
+- what was the result from the last test?
+    - negative, positive, don't know yet
+- do you have any chronic STIs/conditions
+- current medications/contraceptives/vaccinations
 - sexual orientation
 
 ## pages
