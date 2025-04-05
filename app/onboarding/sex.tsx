@@ -1,18 +1,20 @@
-import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
-import OnboardingScreen from "./onboarding-screen";
-import { useOnboarding } from "../context/onboarding-context";
-import { ThemedText } from "@/components/ThemedText";
-import { Colors } from "@/constants/Colors";
+import React, { useState } from 'react';
 
-type Sex = "male" | "female" | "non-binary" | "other" | "prefer-not-to-say";
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native';
+
+import { useOnboarding } from '../context/onboarding-context';
+import OnboardingScreen from './onboarding-screen';
+
+type Sex = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
 
 const sexOptions: { label: string; value: Sex }[] = [
-  { label: "Male", value: "male" },
-  { label: "Female", value: "female" },
-  { label: "Non-Binary", value: "non-binary" },
-  { label: "Other", value: "other" },
-  { label: "Prefer not to say", value: "prefer-not-to-say" },
+  { label: 'Male', value: 'male' },
+  { label: 'Female', value: 'female' },
+  { label: 'Non-Binary', value: 'non-binary' },
+  { label: 'Other', value: 'other' },
+  { label: 'Prefer not to say', value: 'prefer-not-to-say' },
 ];
 
 export default function SexScreen() {
@@ -21,7 +23,7 @@ export default function SexScreen() {
 
   const validateAndProceed = () => {
     if (!selectedSex) {
-      Alert.alert("Please select an option");
+      Alert.alert('Please select an option');
       return false;
     }
 
@@ -32,8 +34,8 @@ export default function SexScreen() {
   return (
     <OnboardingScreen
       title="What's your sex assigned at birth?"
-      description="This helps us provide relevant health information."
-      nextScreen="/onboarding/last-test"
+      description='This helps us provide relevant health information.'
+      nextScreen='/onboarding/last-test'
       onNext={validateAndProceed}
     >
       <View style={styles.optionsContainer}>
@@ -69,9 +71,9 @@ const styles = StyleSheet.create({
     padding: 15,
     marginVertical: 8,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   selectedOption: {
     borderColor: Colors.light.tint,
@@ -79,10 +81,10 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   selectedOptionText: {
-    fontWeight: "600",
+    fontWeight: '600',
     color: Colors.light.tint,
   },
 });

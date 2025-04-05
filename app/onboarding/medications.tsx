@@ -1,43 +1,45 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
 import {
-  StyleSheet,
-  View,
-  TextInput,
-  TouchableOpacity,
   FlatList,
   KeyboardAvoidingView,
   Platform,
-} from "react-native";
-import OnboardingScreen from "./onboarding-screen";
-import { useOnboarding } from "../context/onboarding-context";
-import { ThemedText } from "@/components/ThemedText";
-import { Colors } from "@/constants/Colors";
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
+import { useOnboarding } from '../context/onboarding-context';
+import OnboardingScreen from './onboarding-screen';
 
 const suggestions = [
-  "Birth Control Pill",
-  "IUD",
-  "Condoms",
-  "Implant",
-  "Patch",
-  "Ring",
-  "Injection",
-  "Emergency Contraception",
-  "PrEP",
-  "None",
+  'Birth Control Pill',
+  'IUD',
+  'Condoms',
+  'Implant',
+  'Patch',
+  'Ring',
+  'Injection',
+  'Emergency Contraception',
+  'PrEP',
+  'None',
 ];
 
 export default function MedicationsScreen() {
   const { data, updateData } = useOnboarding();
   const [medications, setMedications] = useState<string[]>(
-    data.medications || [],
+    data.medications || []
   );
-  const [currentInput, setCurrentInput] = useState("");
+  const [currentInput, setCurrentInput] = useState('');
 
   const addMedication = (med: string) => {
-    if (med.trim() !== "" && !medications.includes(med.trim())) {
+    if (med.trim() !== '' && !medications.includes(med.trim())) {
       const updatedMeds = [...medications, med.trim()];
       setMedications(updatedMeds);
-      setCurrentInput("");
+      setCurrentInput('');
     }
   };
 
@@ -55,23 +57,23 @@ export default function MedicationsScreen() {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <OnboardingScreen
-        title="Current Medications or Contraceptives"
+        title='Current Medications or Contraceptives'
         description="Add any medications or contraceptives you're currently using."
-        nextScreen="/onboarding/orientation"
+        nextScreen='/onboarding/orientation'
         onNext={validateAndProceed}
       >
         <View style={styles.container}>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Add medication or contraceptive"
+              placeholder='Add medication or contraceptive'
               value={currentInput}
               onChangeText={setCurrentInput}
               onSubmitEditing={() => addMedication(currentInput)}
-              returnKeyType="done"
+              returnKeyType='done'
             />
             <TouchableOpacity
               style={styles.addButton}
@@ -102,7 +104,7 @@ export default function MedicationsScreen() {
 
           <View style={styles.listContainer}>
             <ThemedText style={styles.listTitle}>
-              {medications.length > 0 ? "Your list:" : "No items added yet"}
+              {medications.length > 0 ? 'Your list:' : 'No items added yet'}
             </ThemedText>
             <FlatList
               data={medications}
@@ -131,7 +133,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   inputContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 20,
   },
   input: {
@@ -139,38 +141,38 @@ const styles = StyleSheet.create({
     fontSize: 16,
     padding: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   addButton: {
     width: 44,
     height: 44,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: Colors.light.tint,
     borderRadius: 22,
     marginLeft: 10,
   },
   addButtonText: {
-    color: "white",
+    color: 'white',
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   suggestionsContainer: {
     marginBottom: 20,
   },
   suggestionsTitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 10,
   },
   suggestions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   suggestionItem: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: '#f0f0f0',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 16,
@@ -184,19 +186,19 @@ const styles = StyleSheet.create({
   },
   listTitle: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 10,
   },
   medicationItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "white",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: 'white',
     padding: 12,
     borderRadius: 10,
     marginBottom: 8,
     borderWidth: 1,
-    borderColor: "#eee",
+    borderColor: '#eee',
   },
   medicationText: {
     fontSize: 16,
@@ -206,6 +208,6 @@ const styles = StyleSheet.create({
   },
   removeButtonText: {
     fontSize: 22,
-    color: "#ff6b6b",
+    color: '#ff6b6b',
   },
 });

@@ -4,11 +4,11 @@
  */
 
 // New color palette
-const cream = "#DDD5D0"; // Light cream
-const dustyRose = "#CFC0BD"; // Dusty rose
-const sage = "#B8B8AA"; // Sage green
-const forest = "#7F9183"; // Forest green
-const slate = "#586F6B"; // Slate gray
+const cream = '#DDD5D0'; // Light cream
+const dustyRose = '#CFC0BD'; // Dusty rose
+const sage = '#B8B8AA'; // Sage green
+const forest = '#7F9183'; // Forest green
+const slate = '#586F6B'; // Slate gray
 
 const tintColorLight = forest;
 const tintColorDark = cream;

@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from 'react';
+
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { useRouter } from 'expo-router';
 import {
+  Modal,
   Platform,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
-  ScrollView,
-  Modal,
-} from "react-native";
-import { useRouter } from "expo-router";
+} from 'react-native';
 
-import { ThemedText } from "@/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { useOnboarding } from "../context/onboarding-context";
-import OnboardingScreen from "./onboarding-screen";
+import { useOnboarding } from '../context/onboarding-context';
+import OnboardingScreen from './onboarding-screen';
 
 type DateTimePickerEvent = {
   type: string;
@@ -24,19 +25,19 @@ type DateTimePickerEvent = {
 };
 
 const testTypes = [
-  "HIV",
-  "Chlamydia",
-  "Gonorrhea",
-  "Syphilis",
-  "Herpes",
-  "HPV",
-  "Hepatitis B",
-  "Hepatitis C",
-  "Trichomoniasis",
-  "Full Panel",
+  'HIV',
+  'Chlamydia',
+  'Gonorrhea',
+  'Syphilis',
+  'Herpes',
+  'HPV',
+  'Hepatitis B',
+  'Hepatitis C',
+  'Trichomoniasis',
+  'Full Panel',
 ];
 
-const resultOptions = ["Positive", "Negative", "Don't know"];
+const resultOptions = ['Positive', 'Negative', "Don't know"];
 
 type TestHistory = {
   [testName: string]: {
@@ -61,7 +62,7 @@ export default function LastTestScreen() {
   });
 
   const [testHistory, setTestHistory] = useState<TestHistory>(
-    data.testHistory || {},
+    data.testHistory || {}
   );
 
   useEffect(() => {
@@ -76,7 +77,7 @@ export default function LastTestScreen() {
   }, [data]);
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedTest, setSelectedTest] = useState<string>("");
+  const [selectedTest, setSelectedTest] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedResult, setSelectedResult] = useState<string>("Don't know");
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -84,10 +85,10 @@ export default function LastTestScreen() {
 
   const handleDateChange = (
     event: DateTimePickerEvent,
-    selectedDate?: Date,
+    selectedDate?: Date
   ) => {
-    if (Platform.OS === "android") {
-      if (event.type !== "set" || !selectedDate) return;
+    if (Platform.OS === 'android') {
+      if (event.type !== 'set' || !selectedDate) return;
     }
 
     if (selectedDate) {
@@ -107,12 +108,12 @@ export default function LastTestScreen() {
       setNeverTested(false);
     }
     setShowModal(false);
-    setSelectedTest("");
+    setSelectedTest('');
     setCurrentStep(1);
   };
 
   const openAddTestModal = () => {
-    setSelectedTest("");
+    setSelectedTest('');
     setSelectedDate(new Date());
     setSelectedResult("Don't know");
     setCurrentStep(1);
@@ -148,7 +149,7 @@ export default function LastTestScreen() {
       stiTestsReceived: [],
     });
 
-    router.push("/onboarding/chronic-condition-screen");
+    router.push('/onboarding/chronic-condition-screen');
   };
 
   const handleTestSelection = (test: string) => {
@@ -188,29 +189,29 @@ export default function LastTestScreen() {
 
   const formatDate = (date: Date): string => {
     const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     };
     return date.toLocaleDateString(undefined, options);
   };
 
   const getResultColor = (result: string): string => {
     switch (result) {
-      case "Positive":
-        return "#d32f2f"; // Red
-      case "Negative":
-        return "#388e3c"; // Green
+      case 'Positive':
+        return '#d32f2f'; // Red
+      case 'Negative':
+        return '#388e3c'; // Green
       default:
-        return "#757575"; // Gray
+        return '#757575'; // Gray
     }
   };
 
   return (
     <OnboardingScreen
-      title="Your STI/STD Testing History"
+      title='Your STI/STD Testing History'
       description="Tell us which tests you've received and when. This helps us provide relevant reminders."
-      nextScreen="/onboarding/chronic-condition-screen"
+      nextScreen='/onboarding/chronic-condition-screen'
       onNext={validateAndProceed}
     >
       <View style={styles.container}>
@@ -219,7 +220,7 @@ export default function LastTestScreen() {
           style={styles.neverTestedButton}
           onPress={handleNeverTested}
           accessibilityLabel="I've never been tested"
-          accessibilityHint="Select this if you have never been tested for STIs/STDs"
+          accessibilityHint='Select this if you have never been tested for STIs/STDs'
         >
           <ThemedText
             style={[
@@ -241,8 +242,8 @@ export default function LastTestScreen() {
             <TouchableOpacity
               style={styles.addButton}
               onPress={openAddTestModal}
-              accessibilityLabel="Add a test"
-              accessibilityHint="Add a new test to your history"
+              accessibilityLabel='Add a test'
+              accessibilityHint='Add a new test to your history'
             >
               <ThemedText style={styles.addButtonText}>+ Add Test</ThemedText>
             </TouchableOpacity>
@@ -285,7 +286,7 @@ export default function LastTestScreen() {
                       style={styles.editButton}
                       onPress={() => openEditTestModal(test)}
                       accessibilityLabel={`Edit ${test} test`}
-                      accessibilityHint="Edit this test in your history"
+                      accessibilityHint='Edit this test in your history'
                     >
                       <ThemedText style={styles.editButtonText}>
                         Edit
@@ -296,7 +297,7 @@ export default function LastTestScreen() {
                       style={styles.removeButton}
                       onPress={() => removeTest(test)}
                       accessibilityLabel={`Remove ${test} test`}
-                      accessibilityHint="Remove this test from your history"
+                      accessibilityHint='Remove this test from your history'
                     >
                       <ThemedText style={styles.removeButtonText}>
                         Remove
@@ -312,7 +313,7 @@ export default function LastTestScreen() {
         {/* Add/Edit Test Modal */}
         <Modal
           visible={showModal}
-          animationType="slide"
+          animationType='slide'
           transparent={true}
           onRequestClose={() => setShowModal(false)}
         >
@@ -320,7 +321,7 @@ export default function LastTestScreen() {
             <View style={styles.modalContent}>
               <View style={styles.modalHeader}>
                 <ThemedText style={styles.modalTitle}>
-                  {isEditing ? "Edit Test" : "Add New Test"}
+                  {isEditing ? 'Edit Test' : 'Add New Test'}
                 </ThemedText>
                 <TouchableOpacity
                   style={styles.closeButton}
@@ -388,7 +389,7 @@ export default function LastTestScreen() {
                             style={styles.testSelectButton}
                             onPress={() => handleTestSelection(test)}
                             accessibilityLabel={`Add ${test} test`}
-                            accessibilityHint="Select this test to add to your history"
+                            accessibilityHint='Select this test to add to your history'
                           >
                             <ThemedText style={styles.testSelectButtonText}>
                               {test}
@@ -425,14 +426,14 @@ export default function LastTestScreen() {
 
                     <View style={styles.datePickerContainer}>
                       <DateTimePicker
-                        testID="dateTimePicker"
+                        testID='dateTimePicker'
                         value={selectedDate}
-                        mode="date"
-                        display={Platform.OS === "ios" ? "spinner" : "default"}
+                        mode='date'
+                        display={Platform.OS === 'ios' ? 'spinner' : 'default'}
                         onChange={handleDateChange}
                         maximumDate={new Date()}
                         style={styles.datePicker}
-                        themeVariant="light"
+                        themeVariant='light'
                       />
                     </View>
 
@@ -502,7 +503,7 @@ export default function LastTestScreen() {
                           ]}
                           onPress={() => handleResultSelection(result)}
                           accessibilityLabel={`${result} result`}
-                          accessibilityRole="radio"
+                          accessibilityRole='radio'
                           accessibilityState={{
                             checked: selectedResult === result,
                           }}
@@ -557,13 +558,13 @@ export default function LastTestScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
+    width: '100%',
     paddingHorizontal: 15,
     paddingTop: 10,
   },
   neverTestedButton: {
     padding: 12,
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 20,
   },
   neverTestedText: {
@@ -571,22 +572,22 @@ const styles = StyleSheet.create({
     color: Colors.light.tint,
   },
   neverTestedTextSelected: {
-    fontWeight: "bold",
-    textDecorationLine: "underline",
+    fontWeight: 'bold',
+    textDecorationLine: 'underline',
   },
   testHistoryContainer: {
     flex: 1,
-    width: "100%",
+    width: '100%',
   },
   headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 15,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   addButton: {
     backgroundColor: Colors.light.tint,
@@ -595,36 +596,36 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   addButtonText: {
-    color: "white",
-    fontWeight: "600",
+    color: 'white',
+    fontWeight: '600',
     fontSize: 14,
   },
   emptyState: {
     padding: 30,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#f8f8f8",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#f8f8f8',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: "#eee",
+    borderColor: '#eee',
     marginVertical: 20,
   },
   emptyStateText: {
-    textAlign: "center",
-    color: "#666",
+    textAlign: 'center',
+    color: '#666',
     fontSize: 16,
   },
   testsList: {
     flex: 1,
   },
   testItem: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#eee",
-    shadowColor: "#000",
+    borderColor: '#eee',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -634,14 +635,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   testHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 5,
   },
   testName: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   resultBadge: {
     paddingHorizontal: 10,
@@ -649,62 +650,62 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   resultBadgeText: {
-    color: "white",
+    color: 'white',
     fontSize: 12,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   testDate: {
     fontSize: 14,
-    color: "#555",
+    color: '#555',
     marginTop: 4,
   },
   testActions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   editButton: {
     paddingHorizontal: 15,
     paddingVertical: 6,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: '#f0f0f0',
     borderRadius: 15,
     marginRight: 10,
   },
   editButtonText: {
     fontSize: 14,
-    color: "#444",
+    color: '#444',
   },
   removeButton: {
     paddingHorizontal: 15,
     paddingVertical: 6,
-    backgroundColor: "#ffeeee",
+    backgroundColor: '#ffeeee',
     borderRadius: 15,
   },
   removeButtonText: {
     fontSize: 14,
-    color: "#d32f2f",
+    color: '#d32f2f',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "flex-end",
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    maxHeight: "90%",
+    maxHeight: '90%',
   },
   modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: '#eee',
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   closeButton: {
     padding: 8,
@@ -712,27 +713,27 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: 16,
     color: Colors.light.tint,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   modalScrollContent: {
     padding: 15,
   },
   stepIndicator: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginVertical: 20,
   },
   stepContainer: {
-    alignItems: "center",
+    alignItems: 'center',
   },
   stepCircle: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: "#ddd",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 5,
   },
   activeStep: {
@@ -740,100 +741,100 @@ const styles = StyleSheet.create({
   },
   stepNumber: {
     fontSize: 14,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   stepText: {
     fontSize: 12,
-    color: "#555",
+    color: '#555',
   },
   stepConnector: {
     height: 2,
-    backgroundColor: "#ddd",
+    backgroundColor: '#ddd',
     width: 40,
     marginHorizontal: 5,
   },
   instructionText: {
     fontSize: 16,
     marginBottom: 20,
-    color: "#333",
+    color: '#333',
   },
   testButtonsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   testSelectButton: {
-    width: "48%",
+    width: '48%',
     padding: 15,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     marginBottom: 10,
     elevation: 1,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 1,
   },
   testSelectButtonText: {
     fontSize: 15,
-    textAlign: "center",
+    textAlign: 'center',
   },
   allTestsAddedText: {
-    textAlign: "center",
+    textAlign: 'center',
     padding: 20,
-    color: "#666",
-    fontStyle: "italic",
+    color: '#666',
+    fontStyle: 'italic',
   },
   selectedInfoDisplay: {
     marginBottom: 20,
   },
   selectedTestDisplay: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
   },
   selectedDateDisplay: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f0f0f0",
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
     padding: 15,
     borderRadius: 10,
   },
   selectedTestLabel: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginRight: 10,
   },
   selectedTestValue: {
     fontSize: 16,
     color: Colors.light.tint,
-    fontWeight: "500",
+    fontWeight: '500',
   },
   selectedDateValue: {
     fontSize: 16,
-    color: "#555",
+    color: '#555',
   },
   datePickerContainer: {
-    alignItems: "center",
-    backgroundColor: "#f9f9f9",
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
     borderRadius: 10,
     padding: 10,
     marginBottom: 20,
   },
   datePicker: {
-    width: Platform.OS === "ios" ? "100%" : undefined,
-    height: Platform.OS === "ios" ? 180 : undefined,
+    width: Platform.OS === 'ios' ? '100%' : undefined,
+    height: Platform.OS === 'ios' ? 180 : undefined,
   },
   navigationButtons: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 10,
     marginBottom: 20,
   },
@@ -841,13 +842,13 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   backButtonText: {
     fontSize: 16,
-    color: "#666",
+    color: '#666',
   },
   nextButton: {
     paddingVertical: 12,
@@ -857,8 +858,8 @@ const styles = StyleSheet.create({
   },
   nextButtonText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   saveButton: {
     paddingVertical: 12,
@@ -868,8 +869,8 @@ const styles = StyleSheet.create({
   },
   saveButtonText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
+    fontWeight: 'bold',
+    color: 'white',
   },
   resultButtonsContainer: {
     marginBottom: 20,
@@ -878,18 +879,18 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   resultButtonSelected: {
     borderWidth: 2,
   },
   resultButtonText: {
     fontSize: 16,
-    textAlign: "center",
+    textAlign: 'center',
   },
   resultButtonTextSelected: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });

@@ -1,9 +1,10 @@
-import React, { ReactNode } from "react";
-import { StyleSheet, View, SafeAreaView, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { Colors } from "@/constants/Colors";
+import React, { ReactNode } from 'react';
+
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import { useRouter } from 'expo-router';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface OnboardingScreenProps {
   title: string;
@@ -62,7 +63,7 @@ export default function OnboardingScreen({
             activeOpacity={0.8}
           >
             <ThemedText style={styles.buttonText}>
-              {isLastScreen ? "Complete" : "Continue"}
+              {isLastScreen ? 'Complete' : 'Continue'}
             </ThemedText>
           </TouchableOpacity>
 
@@ -81,8 +82,8 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 30,
   },
   backButton: {
@@ -93,14 +94,14 @@ const styles = StyleSheet.create({
   },
   progressContainer: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
   },
   contentContainer: {
     flex: 1,
   },
   title: {
     fontSize: 28,
-    fontWeight: "700",
+    fontWeight: '700',
     marginBottom: 10,
   },
   description: {
@@ -112,27 +113,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonContainer: {
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
   },
   button: {
     backgroundColor: Colors.light.tint,
-    width: "100%",
+    width: '100%',
     paddingVertical: 16,
     borderRadius: 30,
-    alignItems: "center",
+    alignItems: 'center',
     marginBottom: 20,
   },
   buttonText: {
-    color: "white",
+    color: 'white',
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   privacyStatement: {
     fontSize: 14,
     opacity: 0.7,
-    textAlign: "center",
+    textAlign: 'center',
   },
 });

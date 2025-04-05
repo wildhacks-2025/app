@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, Platform, Pressable } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import OnboardingScreen from "./onboarding-screen";
-import { useOnboarding } from "../context/onboarding-context";
+import React, { useState } from 'react';
+
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { useOnboarding } from '../context/onboarding-context';
+import OnboardingScreen from './onboarding-screen';
 
 export default function AgeScreen() {
   const { data, updateData } = useOnboarding();
@@ -11,10 +13,10 @@ export default function AgeScreen() {
   defaultDate.setFullYear(defaultDate.getFullYear() - 18);
 
   const [birthdate, setBirthdate] = useState(
-    data.birthdate ? new Date(data.birthdate) : defaultDate,
+    data.birthdate ? new Date(data.birthdate) : defaultDate
   );
   const [age, setAge] = useState(data.age || calculateAge(defaultDate));
-  const [showPicker, setShowPicker] = useState(Platform.OS === "ios");
+  const [showPicker, setShowPicker] = useState(Platform.OS === 'ios');
 
   function calculateAge(birthDate) {
     const today = new Date();
@@ -32,15 +34,15 @@ export default function AgeScreen() {
   }
 
   const onChange = (event, selectedDate) => {
-    if (event.type === "set" || Platform.OS === "ios") {
+    if (event.type === 'set' || Platform.OS === 'ios') {
       const currentDate = selectedDate || birthdate;
       setBirthdate(currentDate);
       setAge(calculateAge(currentDate));
 
-      if (Platform.OS === "android") {
+      if (Platform.OS === 'android') {
         setShowPicker(false);
       }
-    } else if (Platform.OS === "android" && event.type === "dismissed") {
+    } else if (Platform.OS === 'android' && event.type === 'dismissed') {
       setShowPicker(false);
     }
   };
@@ -51,12 +53,12 @@ export default function AgeScreen() {
 
   const validateAndProceed = () => {
     if (age < 13) {
-      alert("You must be 13 or older to use this app");
+      alert('You must be 13 or older to use this app');
       return false;
     }
 
     if (age > 120) {
-      alert("Please enter a valid birth date");
+      alert('Please enter a valid birth date');
       return false;
     }
 
@@ -70,15 +72,15 @@ export default function AgeScreen() {
 
   return (
     <OnboardingScreen
-      title="How old are you?"
-      description="Your age helps us provide age-appropriate content and resources."
-      nextScreen="/onboarding/sex"
+      title='How old are you?'
+      description='Your age helps us provide age-appropriate content and resources.'
+      nextScreen='/onboarding/sex'
       onNext={validateAndProceed}
     >
       <View style={styles.container}>
         <Text style={styles.ageDisplay}>{age} years old</Text>
 
-        {Platform.OS === "android" && (
+        {Platform.OS === 'android' && (
           <Pressable style={styles.dateButton} onPress={showDatepicker}>
             <Text style={styles.dateButtonText}>
               Select Birth Date: {birthdate.toLocaleDateString()}
@@ -88,10 +90,10 @@ export default function AgeScreen() {
 
         {showPicker && (
           <DateTimePicker
-            testID="dateTimePicker"
+            testID='dateTimePicker'
             value={birthdate}
-            mode="date"
-            display={Platform.OS === "ios" ? "spinner" : "default"}
+            mode='date'
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={onChange}
             maximumDate={new Date()}
             minimumDate={new Date(1900, 0, 1)}
@@ -105,21 +107,21 @@ export default function AgeScreen() {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 20,
-    alignItems: "center",
+    alignItems: 'center',
   },
   ageDisplay: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
   },
   dateButton: {
     padding: 15,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
-    width: "100%",
-    alignItems: "center",
+    borderColor: '#ccc',
+    width: '100%',
+    alignItems: 'center',
   },
   dateButtonText: {
     fontSize: 16,

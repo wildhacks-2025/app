@@ -1,15 +1,15 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { ReactNode, createContext, useContext, useState } from 'react';
 
-type Sex = "male" | "female" | "non-binary" | "other" | "prefer-not-to-say";
+type Sex = 'male' | 'female' | 'non-binary' | 'other' | 'prefer-not-to-say';
 type Orientation =
-  | "straight"
-  | "gay"
-  | "lesbian"
-  | "bisexual"
-  | "pansexual"
-  | "asexual"
-  | "other"
-  | "prefer-not-to-say";
+  | 'straight'
+  | 'gay'
+  | 'lesbian'
+  | 'bisexual'
+  | 'pansexual'
+  | 'asexual'
+  | 'other'
+  | 'prefer-not-to-say';
 
 export type TestHistory = {
   [testName: string]: {
@@ -38,7 +38,7 @@ interface OnboardingContextType {
 }
 
 const initialData: OnboardingData = {
-  name: "",
+  name: '',
   age: null,
   sex: null,
   lastTestedDate: null,
@@ -47,11 +47,11 @@ const initialData: OnboardingData = {
   testHistory: {},
   stiTestsReceived: [],
   chronicConditions: [],
-  otherConditionDetails: "",
+  otherConditionDetails: '',
 };
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(
-  undefined,
+  undefined
 );
 
 export function OnboardingProvider({ children }: { children: ReactNode }) {
@@ -75,7 +75,7 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
 export function useOnboarding() {
   const context = useContext(OnboardingContext);
   if (context === undefined) {
-    throw new Error("useOnboarding must be used within an OnboardingProvider");
+    throw new Error('useOnboarding must be used within an OnboardingProvider');
   }
   return context;
 }

@@ -1,11 +1,12 @@
-import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, View, StyleSheet, ScrollView } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useOnboarding } from "@/app/context/onboarding-context";
-import { Colors } from "@/constants/Colors";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { useEffect, useState } from 'react';
+
+import { useOnboarding } from '@/app/context/onboarding-context';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { Colors } from '@/constants/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Redirect } from 'expo-router';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 export default function Index() {
   const { data, updateData } = useOnboarding();
@@ -18,12 +19,12 @@ export default function Index() {
       try {
         // Check if onboarding is complete
         const onboardingComplete = await AsyncStorage.getItem(
-          "@safespace_onboarding_complete",
+          '@safespace_onboarding_complete'
         );
 
-        if (onboardingComplete === "true") {
+        if (onboardingComplete === 'true') {
           // Load the saved user data
-          const jsonValue = await AsyncStorage.getItem("@safespace_user_data");
+          const jsonValue = await AsyncStorage.getItem('@safespace_user_data');
 
           if (jsonValue) {
             // Parse the JSON string back to an object
@@ -35,7 +36,7 @@ export default function Index() {
           }
         }
       } catch (error) {
-        console.error("Error loading data:", error);
+        console.error('Error loading data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -48,13 +49,13 @@ export default function Index() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={Colors.light.tint} />
+        <ActivityIndicator size='large' color={Colors.light.tint} />
       </View>
     );
   }
 
   // After loading, check if we have data indicating onboarding is complete
-  if (isOnboardingComplete || (data.name !== "" && data.age !== null)) {
+  if (isOnboardingComplete || (data.name !== '' && data.age !== null)) {
     // Display the user's data
     return (
       <ScrollView style={styles.container}>
@@ -94,7 +95,7 @@ export default function Index() {
             <ThemedText style={styles.value}>
               {data.lastTestedDate
                 ? formatDate(new Date(data.lastTestedDate))
-                : "Never tested"}
+                : 'Never tested'}
             </ThemedText>
           </View>
         </ThemedView>
@@ -172,42 +173,42 @@ export default function Index() {
     );
   } else {
     // Redirect to onboarding if no data
-    return <Redirect href="/onboarding/welcome" />;
+    return <Redirect href='/onboarding/welcome' />;
   }
 }
 
 // Helper functions for formatting data
 function formatDate(date) {
-  const options = { year: "numeric", month: "long", day: "numeric" };
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
   return date.toLocaleDateString(undefined, options);
 }
 
 function formatSex(sex) {
-  if (!sex) return "Not specified";
+  if (!sex) return 'Not specified';
 
   const formatted = {
-    male: "Male",
-    female: "Female",
-    "non-binary": "Non-Binary",
-    other: "Other",
-    "prefer-not-to-say": "Prefer not to say",
+    male: 'Male',
+    female: 'Female',
+    'non-binary': 'Non-Binary',
+    other: 'Other',
+    'prefer-not-to-say': 'Prefer not to say',
   };
 
   return formatted[sex] || sex;
 }
 
 function formatOrientation(orientation) {
-  if (!orientation) return "Not specified";
+  if (!orientation) return 'Not specified';
 
   const formatted = {
-    straight: "Straight",
-    gay: "Gay",
-    lesbian: "Lesbian",
-    bisexual: "Bisexual",
-    pansexual: "Pansexual",
-    asexual: "Asexual",
-    other: "Other",
-    "prefer-not-to-say": "Prefer not to say",
+    straight: 'Straight',
+    gay: 'Gay',
+    lesbian: 'Lesbian',
+    bisexual: 'Bisexual',
+    pansexual: 'Pansexual',
+    asexual: 'Asexual',
+    other: 'Other',
+    'prefer-not-to-say': 'Prefer not to say',
   };
 
   return formatted[orientation] || orientation;
@@ -215,20 +216,20 @@ function formatOrientation(orientation) {
 
 function getResultBadgeStyle(result) {
   switch (result) {
-    case "Positive":
-      return { backgroundColor: "#d32f2f" }; // Red
-    case "Negative":
-      return { backgroundColor: "#388e3c" }; // Green
+    case 'Positive':
+      return { backgroundColor: '#d32f2f' }; // Red
+    case 'Negative':
+      return { backgroundColor: '#388e3c' }; // Green
     default:
-      return { backgroundColor: "#757575" }; // Gray
+      return { backgroundColor: '#757575' }; // Gray
   }
 }
 
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     flex: 1,
@@ -236,18 +237,18 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingVertical: 24,
-    alignItems: "center",
+    alignItems: 'center',
   },
   welcomeText: {
     fontSize: 28,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 8,
   },
   card: {
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -255,20 +256,20 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 16,
     color: Colors.light.tint,
   },
   profileItem: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 12,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: '#f0f0f0',
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     width: 150,
   },
   value: {
@@ -284,32 +285,32 @@ const styles = StyleSheet.create({
   otherDetails: {
     marginTop: 12,
     padding: 12,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: '#f8f8f8',
     borderRadius: 8,
   },
   otherDetailsLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 4,
   },
   otherDetailsText: {
     fontSize: 14,
   },
   testItem: {
-    backgroundColor: "#f8f8f8",
+    backgroundColor: '#f8f8f8',
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
   },
   testHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 4,
   },
   testName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
   },
   resultBadge: {
     paddingHorizontal: 8,
@@ -317,21 +318,21 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   resultText: {
-    color: "white",
+    color: 'white',
     fontSize: 12,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   testDate: {
     fontSize: 14,
-    color: "#666",
+    color: '#666',
   },
   footer: {
     padding: 16,
-    alignItems: "center",
+    alignItems: 'center',
   },
   footerText: {
     fontSize: 14,
-    color: "#888",
-    textAlign: "center",
+    color: '#888',
+    textAlign: 'center',
   },
 });

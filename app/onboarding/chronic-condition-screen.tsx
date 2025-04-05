@@ -1,35 +1,36 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+
+import { ThemedText } from '@/components/ThemedText';
+import { Colors } from '@/constants/Colors';
 import {
+  ScrollView,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
   View,
-  ScrollView,
-  TextInput,
-} from "react-native";
+} from 'react-native';
 
-import { ThemedText } from "@/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { useOnboarding } from "../context/onboarding-context";
-import OnboardingScreen from "./onboarding-screen";
+import { useOnboarding } from '../context/onboarding-context';
+import OnboardingScreen from './onboarding-screen';
 
 const chronicConditions = [
-  "HIV",
-  "Herpes (HSV-1)",
-  "Herpes (HSV-2)",
-  "HPV",
-  "Hepatitis B",
-  "Hepatitis C",
-  "Other",
+  'HIV',
+  'Herpes (HSV-1)',
+  'Herpes (HSV-2)',
+  'HPV',
+  'Hepatitis B',
+  'Hepatitis C',
+  'Other',
 ];
 
 export default function ChronicConditionsScreen() {
   const { data, updateData } = useOnboarding();
   const [selectedConditions, setSelectedConditions] = useState<string[]>(
-    data.chronicConditions || [],
+    data.chronicConditions || []
   );
   const [noConditions, setNoConditions] = useState<boolean>(false);
   const [otherConditionDetails, setOtherConditionDetails] = useState<string>(
-    data.otherConditionDetails || "",
+    data.otherConditionDetails || ''
   );
   const toggleCondition = (condition: string) => {
     if (selectedConditions.includes(condition)) {
@@ -51,9 +52,9 @@ export default function ChronicConditionsScreen() {
   const validateAndProceed = () => {
     updateData({
       chronicConditions: noConditions ? [] : selectedConditions,
-      otherConditionDetails: selectedConditions.includes("Other")
+      otherConditionDetails: selectedConditions.includes('Other')
         ? otherConditionDetails
-        : "",
+        : '',
     });
 
     return true;
@@ -61,9 +62,9 @@ export default function ChronicConditionsScreen() {
 
   return (
     <OnboardingScreen
-      title="Chronic STIs/Conditions"
-      description="Do you have any chronic STIs or related health conditions? This helps us provide relevant resources."
-      nextScreen="/onboarding/medications"
+      title='Chronic STIs/Conditions'
+      description='Do you have any chronic STIs or related health conditions? This helps us provide relevant resources.'
+      nextScreen='/onboarding/medications'
       onNext={validateAndProceed}
     >
       <ScrollView style={styles.container}>
@@ -71,7 +72,7 @@ export default function ChronicConditionsScreen() {
           style={styles.noConditionsButton}
           onPress={toggleNoConditions}
           accessibilityLabel="I don't have any chronic conditions"
-          accessibilityRole="checkbox"
+          accessibilityRole='checkbox'
           accessibilityState={{ checked: noConditions }}
         >
           <View style={styles.checkboxContainer}>
@@ -96,7 +97,7 @@ export default function ChronicConditionsScreen() {
                 style={styles.conditionItem}
                 onPress={() => toggleCondition(condition)}
                 accessibilityLabel={condition}
-                accessibilityRole="checkbox"
+                accessibilityRole='checkbox'
                 accessibilityState={{
                   checked: selectedConditions.includes(condition),
                 }}
@@ -119,7 +120,7 @@ export default function ChronicConditionsScreen() {
                 </View>
               </TouchableOpacity>
             ))}
-            {selectedConditions.includes("Other") && (
+            {selectedConditions.includes('Other') && (
               <View style={styles.otherContainer}>
                 <ThemedText style={styles.otherLabel}>
                   Please specify:
@@ -128,9 +129,9 @@ export default function ChronicConditionsScreen() {
                   style={styles.otherInput}
                   value={otherConditionDetails}
                   onChangeText={setOtherConditionDetails}
-                  placeholder="Enter condition details"
+                  placeholder='Enter condition details'
                   autoFocus={true}
-                  returnKeyType="done"
+                  returnKeyType='done'
                   blurOnSubmit={true}
                 />
               </View>
@@ -151,17 +152,17 @@ export default function ChronicConditionsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
+    width: '100%',
   },
   noConditionsButton: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: '#f8f8f8',
     marginBottom: 20,
   },
   checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   checkbox: {
     width: 24,
@@ -170,8 +171,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: Colors.light.tint,
     marginRight: 12,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   checkboxSelected: {
     backgroundColor: Colors.light.tint,
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   checkboxInner: {
     width: 12,
     height: 12,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 2,
   },
   noConditionsText: {
@@ -190,16 +191,16 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 15,
   },
   conditionItem: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     marginBottom: 10,
     borderWidth: 1,
-    borderColor: "#eee",
+    borderColor: '#eee',
   },
   conditionText: {
     fontSize: 16,
@@ -215,23 +216,23 @@ const styles = StyleSheet.create({
   },
   otherInput: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: '#ddd',
     borderRadius: 8,
     padding: 8,
     fontSize: 16,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     minHeight: 40,
   },
   privacyNote: {
     padding: 15,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 20,
   },
   privacyText: {
     fontSize: 14,
-    color: "#666",
-    textAlign: "center",
+    color: '#666',
+    textAlign: 'center',
   },
 });
