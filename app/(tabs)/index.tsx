@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Redirect } from "expo-router";
 // We'll use the onboarding context instead of AsyncStorage for this example
 import { useOnboarding } from "@/app/context/onboarding-context";
@@ -9,14 +8,16 @@ export default function Index() {
   // Check if onboarding is completed
   const hasCompletedOnboarding = data.name !== "" && data.age !== null;
 
-  // For development, you can force onboarding by setting this to false
-  const forceOnboarding = true;
+  // Setting forceOnboarding to false to allow navigation to main app after completing onboarding
+  const forceOnboarding = false;
 
-  // If onboarding is completed, redirect to main app
-  // Otherwise, redirect to onboarding flow
+  console.log("hasCompletedOnboarding", hasCompletedOnboarding);
   if (hasCompletedOnboarding && !forceOnboarding) {
-    return <Redirect href="/(tabs)" />;
+    console.log("here1");
+    // No need to redirect if we're already in the tabs
+    return null;
   } else {
+    console.log("here2");
     return <Redirect href="/onboarding/welcome" />;
   }
 }

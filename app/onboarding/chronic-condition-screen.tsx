@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  TextInput,
+} from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
@@ -118,6 +124,15 @@ export default function ChronicConditionsScreen() {
                 <ThemedText style={styles.otherLabel}>
                   Please specify:
                 </ThemedText>
+                <TextInput
+                  style={styles.otherInput}
+                  value={otherConditionDetails}
+                  onChangeText={setOtherConditionDetails}
+                  placeholder="Enter condition details"
+                  autoFocus={true}
+                  returnKeyType="done"
+                  blurOnSubmit={true}
+                />
               </View>
             )}
           </View>
@@ -197,6 +212,15 @@ const styles = StyleSheet.create({
   otherLabel: {
     fontSize: 16,
     marginBottom: 10,
+  },
+  otherInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 8,
+    padding: 8,
+    fontSize: 16,
+    backgroundColor: "white",
+    minHeight: 40,
   },
   privacyNote: {
     padding: 15,
