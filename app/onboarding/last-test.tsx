@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Platform,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   Modal,
 } from "react-native";
+import { useRouter } from "expo-router";
 
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
@@ -49,12 +50,39 @@ type TestHistory = {
 
 export default function LastTestScreen() {
   const { data, updateData } = useOnboarding();
-  const [neverTested, setNeverTested] = useState<boolean>(
-    !data.lastTestedDate && !data.testHistory,
-  );
+  const router = useRouter();
+  // More robust initialization of neverTested state
+  const [neverTested, setNeverTested] = useState<boolean>(() => {
+    // Check if there's any test history data
+    if (data.testHistory && Object.keys(data.testHistory).length > 0) {
+      return false;
+    }
+    // Check if there's a last tested date
+    if (data.lastTestedDate) {
+      return false;
+    }
+    // Default to true if no history information exists
+    return true;
+  });
+
+  // Initialize testHistory with a proper empty object if undefined
   const [testHistory, setTestHistory] = useState<TestHistory>(
     data.testHistory || {},
   );
+
+  // Add useEffect to synchronize component state with context
+  useEffect(() => {
+    // If data changes and includes test history, update local state
+    if (data.testHistory && Object.keys(data.testHistory).length > 0) {
+      setTestHistory(data.testHistory);
+      setNeverTested(false);
+    }
+
+    // If data includes lastTestedDate, update neverTested state
+    if (data.lastTestedDate) {
+      setNeverTested(false);
+    }
+  }, [data]);
 
   // State for add/edit modal
   const [showModal, setShowModal] = useState(false);
@@ -89,6 +117,11 @@ export default function LastTestScreen() {
     };
     setTestHistory(updatedHistory);
 
+    // Since we now have a test, ensure neverTested is false
+    if (neverTested) {
+      setNeverTested(false);
+    }
+
     // Reset and close modal
     setShowModal(false);
     setSelectedTest("");
@@ -120,12 +153,28 @@ export default function LastTestScreen() {
     const updatedHistory = { ...testHistory };
     delete updatedHistory[test];
     setTestHistory(updatedHistory);
+
+    // If we removed the last test, check if we should set neverTested
+    if (Object.keys(updatedHistory).length === 0) {
+      setNeverTested(true);
+    }
   };
 
   // Handle "Never Tested" selection
   const handleNeverTested = () => {
+    // Update local state
     setNeverTested(true);
     setTestHistory({});
+
+    // Save the "never tested" state to context
+    updateData({
+      lastTestedDate: null,
+      testHistory: {},
+      stiTestsReceived: [],
+    });
+
+    // Navigate directly to the next screen using router
+    router.push("/onboarding/medications");
   };
 
   // Handle test selection in the modal
@@ -217,82 +266,83 @@ export default function LastTestScreen() {
           </ThemedText>
         </TouchableOpacity>
 
-        {/* Test history section */}
-        {!neverTested && (
-          <View style={styles.testHistoryContainer}>
-            <View style={styles.headerRow}>
-              <ThemedText style={styles.sectionTitle}>
-                Your Testing History
-              </ThemedText>
+        {/* ALWAYS show the Test History Container */}
+        <View style={styles.testHistoryContainer}>
+          <View style={styles.headerRow}>
+            <ThemedText style={styles.sectionTitle}>
+              Your Testing History
+            </ThemedText>
 
-              <TouchableOpacity
-                style={styles.addButton}
-                onPress={openAddTestModal}
-                accessibilityLabel="Add a test"
-                accessibilityHint="Add a new test to your history"
-              >
-                <ThemedText style={styles.addButtonText}>+ Add Test</ThemedText>
-              </TouchableOpacity>
-            </View>
-
-            {Object.keys(testHistory).length === 0 ? (
-              <View style={styles.emptyState}>
-                <ThemedText style={styles.emptyStateText}>
-                  Tap "Add Test" to record tests you've received
-                </ThemedText>
-              </View>
-            ) : (
-              <ScrollView style={styles.testsList}>
-                {Object.entries(testHistory).map(([test, info]) => (
-                  <View key={test} style={styles.testItem}>
-                    <View style={styles.testInfo}>
-                      <View style={styles.testHeader}>
-                        <ThemedText style={styles.testName}>{test}</ThemedText>
-                        <View
-                          style={[
-                            styles.resultBadge,
-                            { backgroundColor: getResultColor(info.result) },
-                          ]}
-                        >
-                          <ThemedText style={styles.resultBadgeText}>
-                            {info.result}
-                          </ThemedText>
-                        </View>
-                      </View>
-                      <ThemedText style={styles.testDate}>
-                        {formatDate(info.date)}
-                      </ThemedText>
-                    </View>
-
-                    <View style={styles.testActions}>
-                      <TouchableOpacity
-                        style={styles.editButton}
-                        onPress={() => openEditTestModal(test)}
-                        accessibilityLabel={`Edit ${test} test`}
-                        accessibilityHint="Edit this test in your history"
-                      >
-                        <ThemedText style={styles.editButtonText}>
-                          Edit
-                        </ThemedText>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={styles.removeButton}
-                        onPress={() => removeTest(test)}
-                        accessibilityLabel={`Remove ${test} test`}
-                        accessibilityHint="Remove this test from your history"
-                      >
-                        <ThemedText style={styles.removeButtonText}>
-                          Remove
-                        </ThemedText>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                ))}
-              </ScrollView>
-            )}
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={openAddTestModal}
+              accessibilityLabel="Add a test"
+              accessibilityHint="Add a new test to your history"
+            >
+              <ThemedText style={styles.addButtonText}>+ Add Test</ThemedText>
+            </TouchableOpacity>
           </View>
-        )}
+
+          {/* Only conditionally show either the empty state or the test list */}
+          {Object.keys(testHistory).length === 0 ? (
+            <View style={styles.emptyState}>
+              <ThemedText style={styles.emptyStateText}>
+                {neverTested
+                  ? "Click 'Add Test' to record your first test"
+                  : "Tap 'Add Test' to record tests you've received"}
+              </ThemedText>
+            </View>
+          ) : (
+            <ScrollView style={styles.testsList}>
+              {Object.entries(testHistory).map(([test, info]) => (
+                <View key={test} style={styles.testItem}>
+                  <View style={styles.testInfo}>
+                    <View style={styles.testHeader}>
+                      <ThemedText style={styles.testName}>{test}</ThemedText>
+                      <View
+                        style={[
+                          styles.resultBadge,
+                          { backgroundColor: getResultColor(info.result) },
+                        ]}
+                      >
+                        <ThemedText style={styles.resultBadgeText}>
+                          {info.result}
+                        </ThemedText>
+                      </View>
+                    </View>
+                    <ThemedText style={styles.testDate}>
+                      {formatDate(info.date)}
+                    </ThemedText>
+                  </View>
+
+                  <View style={styles.testActions}>
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => openEditTestModal(test)}
+                      accessibilityLabel={`Edit ${test} test`}
+                      accessibilityHint="Edit this test in your history"
+                    >
+                      <ThemedText style={styles.editButtonText}>
+                        Edit
+                      </ThemedText>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      style={styles.removeButton}
+                      onPress={() => removeTest(test)}
+                      accessibilityLabel={`Remove ${test} test`}
+                      accessibilityHint="Remove this test from your history"
+                    >
+                      <ThemedText style={styles.removeButtonText}>
+                        Remove
+                      </ThemedText>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+          )}
+        </View>
 
         {/* Add/Edit Test Modal */}
         <Modal

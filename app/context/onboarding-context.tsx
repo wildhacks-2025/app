@@ -11,6 +11,13 @@ type Orientation =
   | "other"
   | "prefer-not-to-say";
 
+export type TestHistory = {
+  [testName: string]: {
+    date: Date;
+    result: string;
+  };
+};
+
 export interface OnboardingData {
   name: string;
   age: number | null;
@@ -18,6 +25,8 @@ export interface OnboardingData {
   lastTestedDate: Date | null;
   medications: string[];
   orientation: Orientation | null;
+  testHistory?: TestHistory;
+  stiTestsReceived?: string[];
 }
 
 interface OnboardingContextType {
@@ -33,6 +42,8 @@ const initialData: OnboardingData = {
   lastTestedDate: null,
   medications: [],
   orientation: null,
+  testHistory: {},
+  stiTestsReceived: [],
 };
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(
