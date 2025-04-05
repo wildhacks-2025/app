@@ -23,7 +23,6 @@ type DateTimePickerEvent = {
   };
 };
 
-// Define the STI/STD test types
 const testTypes = [
   "HIV",
   "Chlamydia",
@@ -37,10 +36,8 @@ const testTypes = [
   "Full Panel",
 ];
 
-// Define test result options
 const resultOptions = ["Positive", "Negative", "Don't know"];
 
-// Type for test history with dates and results
 type TestHistory = {
   [testName: string]: {
     date: Date;
@@ -51,40 +48,33 @@ type TestHistory = {
 export default function LastTestScreen() {
   const { data, updateData } = useOnboarding();
   const router = useRouter();
-  // More robust initialization of neverTested state
   const [neverTested, setNeverTested] = useState<boolean>(() => {
-    // Check if there's any test history data
     if (data.testHistory && Object.keys(data.testHistory).length > 0) {
       return false;
     }
-    // Check if there's a last tested date
+
     if (data.lastTestedDate) {
       return false;
     }
-    // Default to true if no history information exists
+
     return true;
   });
 
-  // Initialize testHistory with a proper empty object if undefined
   const [testHistory, setTestHistory] = useState<TestHistory>(
     data.testHistory || {},
   );
 
-  // Add useEffect to synchronize component state with context
   useEffect(() => {
-    // If data changes and includes test history, update local state
     if (data.testHistory && Object.keys(data.testHistory).length > 0) {
       setTestHistory(data.testHistory);
       setNeverTested(false);
     }
 
-    // If data includes lastTestedDate, update neverTested state
     if (data.lastTestedDate) {
       setNeverTested(false);
     }
   }, [data]);
 
-  // State for add/edit modal
   const [showModal, setShowModal] = useState(false);
   const [selectedTest, setSelectedTest] = useState<string>("");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -92,7 +82,6 @@ export default function LastTestScreen() {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Handle date change in the modal
   const handleDateChange = (
     event: DateTimePickerEvent,
     selectedDate?: Date,
@@ -106,29 +95,22 @@ export default function LastTestScreen() {
     }
   };
 
-  // Save test, date and result from modal
   const saveTest = () => {
     if (!selectedTest) return;
-
     const updatedHistory = { ...testHistory };
     updatedHistory[selectedTest] = {
       date: selectedDate,
       result: selectedResult,
     };
     setTestHistory(updatedHistory);
-
-    // Since we now have a test, ensure neverTested is false
     if (neverTested) {
       setNeverTested(false);
     }
-
-    // Reset and close modal
     setShowModal(false);
     setSelectedTest("");
     setCurrentStep(1);
   };
 
-  // Open modal to add a new test
   const openAddTestModal = () => {
     setSelectedTest("");
     setSelectedDate(new Date());
@@ -138,78 +120,63 @@ export default function LastTestScreen() {
     setShowModal(true);
   };
 
-  // Open modal to edit an existing test
   const openEditTestModal = (test: string) => {
     setSelectedTest(test);
     setSelectedDate(testHistory[test].date);
     setSelectedResult(testHistory[test].result);
     setIsEditing(true);
-    setCurrentStep(2); // Start at date selection when editing
+    setCurrentStep(2);
     setShowModal(true);
   };
 
-  // Remove a test from history
   const removeTest = (test: string) => {
     const updatedHistory = { ...testHistory };
     delete updatedHistory[test];
     setTestHistory(updatedHistory);
 
-    // If we removed the last test, check if we should set neverTested
     if (Object.keys(updatedHistory).length === 0) {
       setNeverTested(true);
     }
   };
 
-  // Handle "Never Tested" selection
   const handleNeverTested = () => {
-    // Update local state
     setNeverTested(true);
     setTestHistory({});
-
-    // Save the "never tested" state to context
     updateData({
       lastTestedDate: null,
       testHistory: {},
       stiTestsReceived: [],
     });
 
-    // Navigate directly to the next screen using router
-    router.push("/onboarding/medications");
+    router.push("/onboarding/chronic-condition-screen");
   };
 
-  // Handle test selection in the modal
   const handleTestSelection = (test: string) => {
     setSelectedTest(test);
-    setCurrentStep(2); // Move to date selection
+    setCurrentStep(2);
   };
 
-  // Move to next step in the flow
   const moveToNextStep = () => {
     setCurrentStep(currentStep + 1);
   };
 
-  // Move to previous step in the flow
   const moveToPreviousStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
     }
   };
 
-  // Select test result
   const handleResultSelection = (result: string) => {
     setSelectedResult(result);
   };
 
-  // Validate and save data before proceeding
   const validateAndProceed = () => {
-    // Get most recent test date (if any)
     let lastTestedDate = null;
     if (Object.keys(testHistory).length > 0) {
       const dates = Object.values(testHistory).map((item) => item.date);
       lastTestedDate = new Date(Math.max(...dates.map((d) => d.getTime())));
     }
 
-    // Update data
     updateData({
       lastTestedDate: neverTested ? null : lastTestedDate,
       testHistory: neverTested ? {} : testHistory,
@@ -219,7 +186,6 @@ export default function LastTestScreen() {
     return true;
   };
 
-  // Format date for display
   const formatDate = (date: Date): string => {
     const options: Intl.DateTimeFormatOptions = {
       year: "numeric",
@@ -229,7 +195,6 @@ export default function LastTestScreen() {
     return date.toLocaleDateString(undefined, options);
   };
 
-  // Get result display color
   const getResultColor = (result: string): string => {
     switch (result) {
       case "Positive":
@@ -245,7 +210,7 @@ export default function LastTestScreen() {
     <OnboardingScreen
       title="Your STI/STD Testing History"
       description="Tell us which tests you've received and when. This helps us provide relevant reminders."
-      nextScreen="/onboarding/medications"
+      nextScreen="/onboarding/chronic-condition-screen"
       onNext={validateAndProceed}
     >
       <View style={styles.container}>

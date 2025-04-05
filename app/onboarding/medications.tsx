@@ -13,7 +13,6 @@ import { useOnboarding } from "../context/onboarding-context";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 
-// Common medications and contraceptives
 const suggestions = [
   "Birth Control Pill",
   "IUD",

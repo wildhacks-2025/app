@@ -21,6 +21,7 @@ wildhacks 2025 wellness track project
     - negative, positive, don't know yet
 - do you have any chronic STIs/conditions
 - current medications/contraceptives/vaccinations
+  - PEP, DOXYPEP
 - sexual orientation
 
 ## pages

@@ -27,6 +27,8 @@ export interface OnboardingData {
   orientation: Orientation | null;
   testHistory?: TestHistory;
   stiTestsReceived?: string[];
+  chronicConditions?: string[];
+  otherConditionDetails?: string;
 }
 
 interface OnboardingContextType {
@@ -44,6 +46,8 @@ const initialData: OnboardingData = {
   orientation: null,
   testHistory: {},
   stiTestsReceived: [],
+  chronicConditions: [],
+  otherConditionDetails: "",
 };
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(
