@@ -6,7 +6,6 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 
-// Define types for clinics and region
 type Clinic = {
   id: string;
   name: string;
@@ -32,12 +31,12 @@ export default function ExploreScreen() {
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const mapRef = useRef<MapView>(null);
 
-  // Use safe area insets to adjust padding dynamically
+  // padding for dynamic island
   const insets = useSafeAreaInsets();
 
   const fetchClinics = async () => {
     try {
-      // Step 1: Convert ZIP code to coordinates using Geocoding API
+      // geocoding api
       const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode}&key=AIzaSyDR4t39Yp3SQhzVA338Yqi93h7WZmrZoVw`;
       const geocodeResponse = await fetch(geocodeUrl);
       const geocodeData = await geocodeResponse.json();
@@ -49,7 +48,7 @@ export default function ExploreScreen() {
 
       const { lat, lng } = geocodeData.results[0].geometry.location;
 
-      // Step 2: Search for clinics using Places API
+      // places api
       const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=10000&type=health&keyword=sexual%20health%20clinic&key=AIzaSyDR4t39Yp3SQhzVA338Yqi93h7WZmrZoVw`;
       const placesResponse = await fetch(placesUrl);
       const placesData = await placesResponse.json();
@@ -59,7 +58,6 @@ export default function ExploreScreen() {
         return;
       }
 
-      // Map the fetched data to Clinic objects
       const fetchedClinics = placesData.results.map((place: any) => ({
         id: place.place_id,
         name: place.name,
@@ -72,7 +70,7 @@ export default function ExploreScreen() {
 
       setClinics(fetchedClinics);
 
-      // Update map region based on the first clinic's location
+      // update map region based on the first clinic's location
       if (fetchedClinics.length > 0) {
         const firstClinic = fetchedClinics[0];
         const newRegion = {
@@ -101,7 +99,7 @@ export default function ExploreScreen() {
 
   return (
     <ThemedView style={styles.container}>
-      {/* Search Input */}
+      {/* search input */}
       <View style={[styles.searchContainer, { paddingTop: insets.top + 10 }]}>
         <TextInput
           style={styles.input}
@@ -117,7 +115,7 @@ export default function ExploreScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Map */}
+      {/* map */}
       <MapView 
         ref={mapRef}
         style={styles.map} 
