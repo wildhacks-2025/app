@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import { useOnboarding } from "@/app/context/onboarding-context";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import DashboardItem from "@/components/home-dashboard/dashboard-item";
 import WeeklyCalendar from "@/components/home-dashboard/weekly-calendar";
+import HealthMetrics from "@/components/home-dashboard/health-metrics"; // Import the HealthMetrics component
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
@@ -36,6 +36,34 @@ export default function Index() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerAnim = useRef(new Animated.Value(DRAWER_HEIGHT)).current;
   const overlayAnim = useRef(new Animated.Value(0)).current;
+
+  // Determine which health metric to show based on data
+  const [healthMetricType, setHealthMetricType] = useState("Testing due");
+  const [daysToEvent, setDaysToEvent] = useState(3);
+
+  useEffect(() => {
+    // Calculate days to next test based on last tested date
+    if (data.lastTestedDate) {
+      const lastTest = new Date(data.lastTestedDate);
+      const nextTest = new Date(lastTest);
+      nextTest.setMonth(lastTest.getMonth() + 3); // Assuming 3-month testing cycle
+
+      const today = new Date();
+      const diffTime = nextTest - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      setDaysToEvent(diffDays);
+
+      // Set appropriate metric type
+      if (diffDays <= 7) {
+        setHealthMetricType("Testing due");
+      } else {
+        // For demo purposes, showing the "Ovulation" metric if testing is not due soon
+        // In a real app, you would determine this based on menstrual cycle data
+        setHealthMetricType("Ovulation");
+      }
+    }
+  }, [data.lastTestedDate]);
 
   const [logData] = useState([
     {
@@ -206,6 +234,9 @@ export default function Index() {
             />
           </View>
         </View>
+
+        {/* Health Metrics Card */}
+        <HealthMetrics daysToEvent={daysToEvent} eventType={healthMetricType} />
 
         {/* Dashboard Content */}
         <View style={styles.dashboardContent}>
@@ -413,6 +444,7 @@ const styles = StyleSheet.create({
   // Dashboard content
   dashboardContent: {
     padding: 16,
+    marginTop: 5, // Small margin after the HealthMetrics card
   },
   dashboardItem: {
     borderRadius: 20,

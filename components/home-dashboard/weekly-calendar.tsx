@@ -11,7 +11,7 @@ import {
 } from "react-native";
 
 const cream = "#DDD5D0"; // Light cream
-const dustyRose = "#CFC0BD"; // Dusty rose
+const dustyRose = "#CFC0BD"; // Dusty rose`
 const sage = "#B8B8AA"; // Sage green
 const forest = "#7F9183"; // Forest green
 const slate = "#586F6B"; // Slate gray
@@ -300,14 +300,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   compactDateText: {
-    fontSize: 12, // Smaller font
+    fontSize: 12,
   },
-  // Original styles
+
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 15,
   },
