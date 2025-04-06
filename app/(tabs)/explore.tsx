@@ -1,128 +1,186 @@
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, View, TextInput, TouchableOpacity, Alert, Dimensions, Keyboard } from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Image, Platform, StyleSheet } from 'react-native';
+import { Colors } from '@/constants/Colors';
 
-export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color='#808080'
-          name='chevron.left.forwardslash.chevron.right'
-          style={styles.headerImage}
-        />
+// Define types for clinics and region
+type Clinic = {
+  id: string;
+  name: string;
+  address: string;
+  coordinate: { latitude: number; longitude: number };
+};
+
+type Region = {
+  latitude: number;
+  longitude: number;
+  latitudeDelta: number;
+  longitudeDelta: number;
+};
+
+export default function ExploreScreen() {
+  const [zipcode, setZipcode] = useState<string>('10001');
+  const [region, setRegion] = useState<Region>({
+    latitude: 40.7128,
+    longitude: -74.0060,
+    latitudeDelta: 0.0422,
+    longitudeDelta: 0.0221,
+  });
+  const [clinics, setClinics] = useState<Clinic[]>([]);
+  const mapRef = useRef<MapView>(null);
+
+  // Use safe area insets to adjust padding dynamically
+  const insets = useSafeAreaInsets();
+
+  const fetchClinics = async () => {
+    try {
+      // Step 1: Convert ZIP code to coordinates using Geocoding API
+      const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${zipcode}&key=AIzaSyDR4t39Yp3SQhzVA338Yqi93h7WZmrZoVw`;
+      const geocodeResponse = await fetch(geocodeUrl);
+      const geocodeData = await geocodeResponse.json();
+
+      if (geocodeData.results.length === 0) {
+        Alert.alert('Invalid Location', 'Could not find this location.');
+        return;
       }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type='title'>Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>
-        This app includes example code to help you get started.
-      </ThemedText>
-      <Collapsible title='File-based routing'>
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type='defaultSemiBold'>app/(tabs)/index.tsx</ThemedText>{' '}
-          and{' '}
-          <ThemedText type='defaultSemiBold'>app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in{' '}
-          <ThemedText type='defaultSemiBold'>app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href='https://docs.expo.dev/router/introduction'>
-          <ThemedText type='link'>Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title='Android, iOS, and web support'>
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the
-          web version, press <ThemedText type='defaultSemiBold'>w</ThemedText>{' '}
-          in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title='Images'>
-        <ThemedText>
-          For static images, you can use the{' '}
-          <ThemedText type='defaultSemiBold'>@2x</ThemedText> and{' '}
-          <ThemedText type='defaultSemiBold'>@3x</ThemedText> suffixes to
-          provide files for different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ alignSelf: 'center' }}
+
+      const { lat, lng } = geocodeData.results[0].geometry.location;
+
+      // Step 2: Search for clinics using Places API
+      const placesUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=10000&type=health&keyword=sexual%20health%20clinic&key=AIzaSyDR4t39Yp3SQhzVA338Yqi93h7WZmrZoVw`;
+      const placesResponse = await fetch(placesUrl);
+      const placesData = await placesResponse.json();
+
+      if (placesData.results.length === 0) {
+        Alert.alert('No Clinics Found', `No clinics found near ZIP code ${zipcode}.`);
+        return;
+      }
+
+      // Map the fetched data to Clinic objects
+      const fetchedClinics = placesData.results.map((place: any) => ({
+        id: place.place_id,
+        name: place.name,
+        address: place.vicinity,
+        coordinate: {
+          latitude: place.geometry.location.lat,
+          longitude: place.geometry.location.lng,
+        },
+      }));
+
+      setClinics(fetchedClinics);
+
+      // Update map region based on the first clinic's location
+      if (fetchedClinics.length > 0) {
+        const firstClinic = fetchedClinics[0];
+        const newRegion = {
+          latitude: firstClinic.coordinate.latitude,
+          longitude: firstClinic.coordinate.longitude,
+          latitudeDelta: 0.0422,
+          longitudeDelta: 0.0221,
+        };
+        setRegion(newRegion);
+        mapRef.current?.animateToRegion(newRegion, 1000);
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'An error occurred while fetching clinics.');
+    }
+  };
+
+  const handleSearch = () => {
+    if (/^\d{5}$/.test(zipcode)) {
+      Keyboard.dismiss();
+      fetchClinics();
+    } else {
+      Alert.alert('Invalid ZIP Code', 'Please enter a valid 5-digit ZIP code.');
+    }
+  };
+
+  return (
+    <ThemedView style={styles.container}>
+      {/* Search Input */}
+      <View style={[styles.searchContainer, { paddingTop: insets.top + 10 }]}>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter ZIP Code"
+          value={zipcode}
+          onChangeText={setZipcode}
+          keyboardType="numeric"
+          maxLength={5}
+          placeholderTextColor="#999"
         />
-        <ExternalLink href='https://reactnative.dev/docs/images'>
-          <ThemedText type='link'>Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title='Custom fonts'>
-        <ThemedText>
-          Open <ThemedText type='defaultSemiBold'>app/_layout.tsx</ThemedText>{' '}
-          to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href='https://docs.expo.dev/versions/latest/sdk/font'>
-          <ThemedText type='link'>Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title='Light and dark mode components'>
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type='defaultSemiBold'>useColorScheme()</ThemedText> hook
-          lets you inspect what the user's current color scheme is, and so you
-          can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href='https://docs.expo.dev/develop/user-interface/color-themes/'>
-          <ThemedText type='link'>Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title='Animations'>
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type='defaultSemiBold'>
-            components/HelloWave.tsx
-          </ThemedText>{' '}
-          component uses the powerful{' '}
-          <ThemedText type='defaultSemiBold'>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The{' '}
-              <ThemedText type='defaultSemiBold'>
-                components/ParallaxScrollView.tsx
-              </ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+        <TouchableOpacity style={styles.button} onPress={handleSearch}>
+          <ThemedText style={styles.buttonText}>Search</ThemedText>
+        </TouchableOpacity>
+      </View>
+
+      {/* Map */}
+      <MapView 
+        ref={mapRef}
+        style={styles.map} 
+        region={region}
+      >
+        {clinics.map((clinic) => (
+          clinic.coordinate && (
+            <Marker
+              key={clinic.id}
+              coordinate={clinic.coordinate}
+              title={clinic.name}
+              description={clinic.address}
+            />
+          )
+        ))}
+      </MapView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
   },
-  titleContainer: {
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: 'row',
-    gap: 8,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#ddd',
+    backgroundColor: '#fff',
+    zIndex: 1,
   },
+  input: {
+    flexGrow: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    marginRight: 8,
+  },
+  button: {
+    backgroundColor: Colors.light.tint,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: '600',
+  },
+  map: {
+    flex: 1,
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  }
 });
