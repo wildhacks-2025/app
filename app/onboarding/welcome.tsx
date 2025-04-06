@@ -1,22 +1,22 @@
-import React from 'react';
+import React from "react";
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import { useRouter } from 'expo-router';
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import { Colors } from "@/constants/Colors";
+import { useRouter } from "expo-router";
 import {
   Image,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
 
 export default function WelcomeScreen() {
   const router = useRouter();
 
   const startOnboarding = () => {
-    router.push('/onboarding/name');
+    router.push("/onboarding/name");
   };
 
   return (
@@ -24,14 +24,14 @@ export default function WelcomeScreen() {
       <ThemedView style={styles.container}>
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../assets/images/icon.png')}
+            source={require("../../assets/images/icon.png")}
             style={styles.logo}
-            resizeMode='contain'
+            resizeMode="contain"
           />
         </View>
 
         <View style={styles.contentContainer}>
-          <ThemedText style={styles.title}>Welcome to SafeSpace</ThemedText>
+          <ThemedText style={styles.title}>Welcome to cocoon</ThemedText>
           <ThemedText style={styles.tagline}>
             Your safe space for sexual health.
           </ThemedText>
@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   logoContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 40,
   },
   logo: {
@@ -77,51 +77,51 @@ const styles = StyleSheet.create({
     height: 120,
   },
   contentContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 28,
-    fontWeight: '700',
+    fontWeight: "700",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   tagline: {
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   description: {
     fontSize: 16,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 10,
   },
   privacyNote: {
     fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
+    fontWeight: "600",
+    textAlign: "center",
   },
   buttonContainer: {
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
     marginBottom: 40,
   },
   button: {
     backgroundColor: Colors.light.tint,
-    width: '80%',
+    width: "80%",
     paddingVertical: 16,
     borderRadius: 30,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 20,
   },
   buttonText: {
-    color: 'white',
+    color: "white",
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   privacyStatement: {
     fontSize: 14,
     opacity: 0.7,
-    textAlign: 'center',
+    textAlign: "center",
   },
 });
