@@ -1,31 +1,32 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from 'react';
+
+import { useOnboarding } from '@/app/context/onboarding-context';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import DashboardItem from '@/components/home-dashboard/dashboard-item';
+import WeeklyCalendar from '@/components/home-dashboard/weekly-calendar';
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Redirect } from 'expo-router';
 import {
-  StyleSheet,
-  View,
-  ScrollView,
-  TouchableOpacity,
   Animated,
   Dimensions,
   SafeAreaView,
+  ScrollView,
   StatusBar,
-} from "react-native";
-import { useOnboarding } from "@/app/context/onboarding-context";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Redirect } from "expo-router";
-import { ActivityIndicator } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import DashboardItem from "@/components/home-dashboard/dashboard-item";
-import WeeklyCalendar from "@/components/home-dashboard/weekly-calendar";
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
-const cream = "#DDD5D0"; // Light cream
-const dustyRose = "#CFC0BD"; // Dusty rose
-const sage = "#B8B8AA"; // Sage green
-const forest = "#7F9183"; // Forest green
-const slate = "#586F6B"; // Slate gray
+const cream = '#DDD5D0'; // Light cream
+const dustyRose = '#CFC0BD'; // Dusty rose
+const sage = '#B8B8AA'; // Sage green
+const forest = '#7F9183'; // Forest green
+const slate = '#586F6B'; // Slate gray
 
-const { height } = Dimensions.get("window");
+const { height } = Dimensions.get('window');
 const DRAWER_HEIGHT = height * 0.8;
 
 export default function Index() {
@@ -38,16 +39,16 @@ export default function Index() {
 
   const [logData] = useState([
     {
-      id: "1",
-      date: "2025-04-01",
-      symptoms: ["Headache", "Fever"],
-      notes: "Rested all day",
+      id: '1',
+      date: '2025-04-01',
+      symptoms: ['Headache', 'Fever'],
+      notes: 'Rested all day',
     },
     {
-      id: "2",
-      date: "2025-04-03",
-      symptoms: ["Sore throat"],
-      notes: "Taking medication",
+      id: '2',
+      date: '2025-04-03',
+      symptoms: ['Sore throat'],
+      notes: 'Taking medication',
     },
   ]);
 
@@ -60,17 +61,17 @@ export default function Index() {
     }
     return new Date();
   });
-  const [riskLevel] = useState("Low");
+  const [riskLevel] = useState('Low');
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const onboardingComplete = await AsyncStorage.getItem(
-          "@safespace_onboarding_complete",
+          '@safespace_onboarding_complete'
         );
 
-        if (onboardingComplete === "true") {
-          const jsonValue = await AsyncStorage.getItem("@safespace_user_data");
+        if (onboardingComplete === 'true') {
+          const jsonValue = await AsyncStorage.getItem('@safespace_user_data');
 
           if (jsonValue) {
             const savedData = JSON.parse(jsonValue);
@@ -80,7 +81,7 @@ export default function Index() {
           }
         }
       } catch (error) {
-        console.error("Error loading data:", error);
+        console.error('Error loading data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -92,13 +93,13 @@ export default function Index() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={forest} />
+        <ActivityIndicator size='large' color={forest} />
       </View>
     );
   }
 
-  if (!isOnboardingComplete && (data.name === "" || data.age === null)) {
-    return <Redirect href="/onboarding/welcome" />;
+  if (!isOnboardingComplete && (data.name === '' || data.age === null)) {
+    return <Redirect href='/onboarding/welcome' />;
   }
 
   const openDrawer = () => {
@@ -135,36 +136,36 @@ export default function Index() {
   };
 
   const formatDate = (date) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(date).toLocaleDateString(undefined, options);
   };
 
   const formatSex = (sex) => {
-    if (!sex) return "Not specified";
+    if (!sex) return 'Not specified';
 
     const formatted = {
-      male: "Male",
-      female: "Female",
-      "non-binary": "Non-Binary",
-      other: "Other",
-      "prefer-not-to-say": "Prefer not to say",
+      male: 'Male',
+      female: 'Female',
+      'non-binary': 'Non-Binary',
+      other: 'Other',
+      'prefer-not-to-say': 'Prefer not to say',
     };
 
     return formatted[sex] || sex;
   };
 
   const formatOrientation = (orientation) => {
-    if (!orientation) return "Not specified";
+    if (!orientation) return 'Not specified';
 
     const formatted = {
-      straight: "Straight",
-      gay: "Gay",
-      lesbian: "Lesbian",
-      bisexual: "Bisexual",
-      pansexual: "Pansexual",
-      asexual: "Asexual",
-      other: "Other",
-      "prefer-not-to-say": "Prefer not to say",
+      straight: 'Straight',
+      gay: 'Gay',
+      lesbian: 'Lesbian',
+      bisexual: 'Bisexual',
+      pansexual: 'Pansexual',
+      asexual: 'Asexual',
+      other: 'Other',
+      'prefer-not-to-say': 'Prefer not to say',
     };
 
     return formatted[orientation] || orientation;
@@ -172,37 +173,37 @@ export default function Index() {
 
   function getResultBadgeStyle(result) {
     switch (result) {
-      case "Positive":
-        return { backgroundColor: "#d32f2f" }; // Red
-      case "Negative":
-        return { backgroundColor: "#388e3c" }; // Green
+      case 'Positive':
+        return { backgroundColor: '#d32f2f' }; // Red
+      case 'Negative':
+        return { backgroundColor: '#388e3c' }; // Green
       default:
-        return { backgroundColor: "#757575" }; // Gray
+        return { backgroundColor: '#757575' }; // Gray
     }
   }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle="dark-content" backgroundColor={cream} />
+      <StatusBar barStyle='dark-content' backgroundColor={cream} />
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={openDrawer} style={styles.menuButton}>
-            <Ionicons name="person-circle-outline" size={28} color={slate} />
+            <Ionicons name='person-circle-outline' size={28} color={slate} />
           </TouchableOpacity>
           <ThemedText style={styles.welcomeText}>Hello, {data.name}</ThemedText>
         </View>
 
         <ScrollView style={styles.scrollContainer}>
           <WeeklyCalendar
-            onDateSelect={(date) => console.log("Selected date:", date)}
+            onDateSelect={(date) => console.log('Selected date:', date)}
           />
 
           <DashboardItem
-            title="log"
+            title='log'
             style={[styles.dashboardItem, styles.logButton]}
           />
           <DashboardItem
-            title="past 7 days log"
+            title='past 7 days log'
             style={[styles.dashboardItem, styles.pastDaysLog]}
           />
 
@@ -215,7 +216,7 @@ export default function Index() {
 
             <View style={[styles.infoItem, styles.nextTestItem]}>
               <ThemedText style={styles.itemText}>
-                recommended{"\n"}day for{"\n"}next test
+                recommended{'\n'}day for{'\n'}next test
               </ThemedText>
               <ThemedText style={styles.dateText}>
                 {formatDate(nextTestDate)}
@@ -223,7 +224,7 @@ export default function Index() {
             </View>
           </View>
           <DashboardItem
-            title="symptom tracker"
+            title='symptom tracker'
             style={[styles.dashboardItem, styles.symptomTracker]}
           />
         </ScrollView>
@@ -241,7 +242,7 @@ export default function Index() {
         <View style={styles.drawerHeader}>
           <ThemedText style={styles.drawerTitle}>Your Profile</ThemedText>
           <TouchableOpacity onPress={closeDrawer}>
-            <Ionicons name="close" size={24} color={slate} />
+            <Ionicons name='close' size={24} color={slate} />
           </TouchableOpacity>
         </View>
 
@@ -278,7 +279,7 @@ export default function Index() {
               <ThemedText style={styles.value}>
                 {data.lastTestedDate
                   ? formatDate(new Date(data.lastTestedDate))
-                  : "Never tested"}
+                  : 'Never tested'}
               </ThemedText>
             </View>
           </ThemedView>
@@ -361,8 +362,8 @@ const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: cream,
   },
   container: {
@@ -370,8 +371,8 @@ const styles = StyleSheet.create({
     backgroundColor: cream,
   },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 16,
     paddingTop: 20,
   },
@@ -381,7 +382,7 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: slate,
   },
   scrollContainer: {
@@ -391,8 +392,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     marginBottom: 16,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   weekCalendar: {
     backgroundColor: sage,
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
   logButton: {
     backgroundColor: dustyRose,
     height: 200,
-    width: "100%",
+    width: '100%',
     borderRadius: 100,
   },
   pastDaysLog: {
@@ -409,17 +410,17 @@ const styles = StyleSheet.create({
     height: 100,
   },
   infoRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 16,
   },
   infoItem: {
     borderRadius: 20,
     padding: 20,
-    width: "48%",
+    width: '48%',
     height: 150,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   riskItem: {
     backgroundColor: sage,
@@ -433,33 +434,33 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 20,
-    fontWeight: "600",
-    color: "black",
-    textAlign: "center",
+    fontWeight: '600',
+    color: 'black',
+    textAlign: 'center',
   },
   riskText: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginTop: 12,
-    color: "black",
+    color: 'black',
   },
   dateText: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
     marginTop: 12,
-    color: "black",
-    textAlign: "center",
+    color: 'black',
+    textAlign: 'center',
   },
   overlay: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "black",
+    backgroundColor: 'black',
   },
   drawer: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
@@ -470,7 +471,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 10,
     elevation: 15,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -480,13 +481,13 @@ const styles = StyleSheet.create({
     height: 5,
     backgroundColor: slate,
     borderRadius: 3,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 10,
   },
   drawerHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
     paddingBottom: 10,
     borderBottomWidth: 1,
@@ -494,7 +495,7 @@ const styles = StyleSheet.create({
   },
   drawerTitle: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: forest,
   },
   drawerContent: {
@@ -504,8 +505,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#000",
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -513,20 +514,20 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 16,
     color: forest,
   },
   profileItem: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 12,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: '#f0f0f0',
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     width: 150,
     color: slate,
   },
@@ -545,12 +546,12 @@ const styles = StyleSheet.create({
   otherDetails: {
     marginTop: 12,
     padding: 12,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: '#f8f8f8',
     borderRadius: 8,
   },
   otherDetailsLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 4,
     color: slate,
   },
@@ -559,20 +560,20 @@ const styles = StyleSheet.create({
     color: slate,
   },
   testItem: {
-    backgroundColor: sage + "33",
+    backgroundColor: sage + '33',
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
   },
   testHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 4,
   },
   testName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     color: slate,
   },
   resultBadge: {
@@ -581,9 +582,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   resultText: {
-    color: "white",
+    color: 'white',
     fontSize: 12,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   testDate: {
     fontSize: 14,
