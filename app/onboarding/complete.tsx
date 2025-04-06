@@ -89,7 +89,7 @@ export default function CompleteScreen() {
               <ActivityIndicator color='white' />
             ) : (
               <ThemedText style={styles.buttonText}>
-                Start Using SafeSpace
+                Start Using cocoon
               </ThemedText>
             )}
           </TouchableOpacity>

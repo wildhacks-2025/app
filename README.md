@@ -32,3 +32,14 @@ wildhacks 2025 wellness track project
 - calendar view
   - add activities view
 - Resources page
+
+
+## todos
+
+- [ ] home dashboard view
+  - [ ] display weekly calendar
+  - [ ] display buttons to log. have it link to page to pick what you want to log
+  - [ ] display summary / from past log (past 7 days)
+  - [ ] display calculation of current risk based on logs
+  - [ ] calculate and display reccomended day for next test
+  - [ ] display summaries from sympthon tracker

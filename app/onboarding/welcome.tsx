@@ -31,7 +31,7 @@ export default function WelcomeScreen() {
         </View>
 
         <View style={styles.contentContainer}>
-          <ThemedText style={styles.title}>Welcome to SafeSpace</ThemedText>
+          <ThemedText style={styles.title}>Welcome to cocoon</ThemedText>
           <ThemedText style={styles.tagline}>
             Your safe space for sexual health.
           </ThemedText>
