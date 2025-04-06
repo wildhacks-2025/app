@@ -235,27 +235,18 @@ export default function Index() {
           </View>
         </View>
 
-        {/* Health Metrics Card */}
         <HealthMetrics daysToEvent={daysToEvent} eventType={healthMetricType} />
-
-        {/* Dashboard Content */}
         <View style={styles.dashboardContent}>
-          <DashboardItem
-            title="log"
-            style={[styles.dashboardItem, styles.logButton]}
-          />
+          {" "}
           <DashboardItem
             title="past 7 days log"
             style={[styles.dashboardItem, styles.pastDaysLog]}
           />
-
-          {/* Risk & Next Test Recommendations */}
           <View style={styles.infoRow}>
             <View style={[styles.infoItem, styles.riskItem]}>
               <ThemedText style={styles.itemText}>current risk</ThemedText>
               <ThemedText style={styles.riskText}>{riskLevel}</ThemedText>
             </View>
-
             <View style={[styles.infoItem, styles.nextTestItem]}>
               <ThemedText style={styles.itemText}>
                 recommended{"\n"}day for{"\n"}next test
@@ -271,8 +262,6 @@ export default function Index() {
           />
         </View>
       </ScrollView>
-
-      {/* Drawer and overlay remain unchanged */}
       {drawerOpen && (
         <Animated.View
           style={[styles.overlay, { opacity: overlayAnim }]}
@@ -282,7 +271,6 @@ export default function Index() {
       <Animated.View
         style={[styles.drawer, { transform: [{ translateY: drawerAnim }] }]}
       >
-        {/* Drawer content remains unchanged */}
         <View style={styles.drawerHandle} />
         <View style={styles.drawerHeader}>
           <ThemedText style={styles.drawerTitle}>Your Profile</ThemedText>
@@ -290,35 +278,29 @@ export default function Index() {
             <Ionicons name="close" size={24} color={slate} />
           </TouchableOpacity>
         </View>
-
         <ScrollView style={styles.drawerContent}>
           <ThemedView style={styles.card}>
             <ThemedText style={styles.cardTitle}>Personal Info</ThemedText>
-
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Name:</ThemedText>
               <ThemedText style={styles.value}>{data.name}</ThemedText>
             </View>
-
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Age:</ThemedText>
               <ThemedText style={styles.value}>{data.age} years old</ThemedText>
             </View>
-
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Sex:</ThemedText>
               <ThemedText style={styles.value}>
                 {formatSex(data.sex)}
               </ThemedText>
             </View>
-
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Sexual Orientation:</ThemedText>
               <ThemedText style={styles.value}>
                 {formatOrientation(data.orientation)}
               </ThemedText>
             </View>
-
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Last Tested:</ThemedText>
               <ThemedText style={styles.value}>
@@ -328,7 +310,6 @@ export default function Index() {
               </ThemedText>
             </View>
           </ThemedView>
-
           {data.chronicConditions && data.chronicConditions.length > 0 && (
             <ThemedView style={styles.card}>
               <ThemedText style={styles.cardTitle}>
@@ -353,7 +334,6 @@ export default function Index() {
               )}
             </ThemedView>
           )}
-
           {data.medications && data.medications.length > 0 && (
             <ThemedView style={styles.card}>
               <ThemedText style={styles.cardTitle}>
@@ -368,7 +348,6 @@ export default function Index() {
               ))}
             </ThemedView>
           )}
-
           {data.testHistory && Object.keys(data.testHistory).length > 0 && (
             <ThemedView style={styles.card}>
               <ThemedText style={styles.cardTitle}>Testing History</ThemedText>
