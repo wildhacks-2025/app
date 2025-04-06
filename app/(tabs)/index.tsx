@@ -8,27 +8,24 @@ import {
   Dimensions,
   SafeAreaView,
   StatusBar,
-  Text,
-  FlatList,
 } from "react-native";
 import { useOnboarding } from "@/app/context/onboarding-context";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { Colors } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Redirect } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import DashboardItem from "@/components/home-dashboard/dashboard-item";
 
-// Color palette
 const cream = "#DDD5D0"; // Light cream
 const dustyRose = "#CFC0BD"; // Dusty rose
 const sage = "#B8B8AA"; // Sage green
 const forest = "#7F9183"; // Forest green
 const slate = "#586F6B"; // Slate gray
 
-const { width, height } = Dimensions.get("window");
-const DRAWER_HEIGHT = height * 0.8; // Drawer takes up 80% of screen height
+const { height } = Dimensions.get("window");
+const DRAWER_HEIGHT = height * 0.8;
 
 export default function Index() {
   const { data, updateData } = useOnboarding();
@@ -38,8 +35,7 @@ export default function Index() {
   const drawerAnim = useRef(new Animated.Value(DRAWER_HEIGHT)).current;
   const overlayAnim = useRef(new Animated.Value(0)).current;
 
-  // Sample log data for the past 7 days
-  const [logData, setLogData] = useState([
+  const [logData] = useState([
     {
       id: "1",
       date: "2025-04-01",
@@ -54,38 +50,30 @@ export default function Index() {
     },
   ]);
 
-  // Next test recommendation based on last test date
-  const [nextTestDate, setNextTestDate] = useState(() => {
+  const [nextTestDate] = useState(() => {
     if (data.lastTestedDate) {
       const lastTest = new Date(data.lastTestedDate);
       const nextTest = new Date(lastTest);
-      nextTest.setMonth(lastTest.getMonth() + 3); // Assuming 3-month recommendation
+      nextTest.setMonth(lastTest.getMonth() + 3);
       return nextTest;
     }
-    return new Date(); // Default to today if no last test
+    return new Date();
   });
-
-  // Current risk level (simplified calculation)
-  const [riskLevel, setRiskLevel] = useState("Low");
+  const [riskLevel] = useState("Low");
 
   useEffect(() => {
-    // Load the data when the component mounts
     const loadData = async () => {
       try {
-        // Check if onboarding is complete
         const onboardingComplete = await AsyncStorage.getItem(
           "@safespace_onboarding_complete",
         );
 
         if (onboardingComplete === "true") {
-          // Load the saved user data
           const jsonValue = await AsyncStorage.getItem("@safespace_user_data");
 
           if (jsonValue) {
-            // Parse the JSON string back to an object
             const savedData = JSON.parse(jsonValue);
 
-            // Update the context with the saved data
             updateData(savedData);
             setIsOnboardingComplete(true);
           }
@@ -100,7 +88,6 @@ export default function Index() {
     loadData();
   }, [updateData]);
 
-  // Show a loading indicator while we check storage
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -109,9 +96,7 @@ export default function Index() {
     );
   }
 
-  // After loading, check if we have data indicating onboarding is complete
   if (!isOnboardingComplete && (data.name === "" || data.age === null)) {
-    // Redirect to onboarding if no data
     return <Redirect href="/onboarding/welcome" />;
   }
 
@@ -184,11 +169,20 @@ export default function Index() {
     return formatted[orientation] || orientation;
   };
 
+  function getResultBadgeStyle(result) {
+    switch (result) {
+      case "Positive":
+        return { backgroundColor: "#d32f2f" }; // Red
+      case "Negative":
+        return { backgroundColor: "#388e3c" }; // Green
+      default:
+        return { backgroundColor: "#757575" }; // Gray
+    }
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" backgroundColor={cream} />
-
-      {/* Main Dashboard */}
       <View style={styles.container}>
         <View style={styles.header}>
           <TouchableOpacity onPress={openDrawer} style={styles.menuButton}>
@@ -198,56 +192,47 @@ export default function Index() {
         </View>
 
         <ScrollView style={styles.scrollContainer}>
-          {/* Week Calendar Button */}
-          <TouchableOpacity style={[styles.dashboardItem, styles.weekCalendar]}>
-            <ThemedText style={styles.itemText}>week calendar</ThemedText>
-          </TouchableOpacity>
-
-          {/* Log Button */}
-          <TouchableOpacity style={[styles.dashboardItem, styles.logButton]}>
-            <ThemedText style={styles.itemText}>log</ThemedText>
-          </TouchableOpacity>
-
-          {/* Past 7 Days Log */}
-          <TouchableOpacity style={[styles.dashboardItem, styles.pastDaysLog]}>
-            <ThemedText style={styles.itemText}>past 7 days log</ThemedText>
-          </TouchableOpacity>
+          <DashboardItem
+            title="week calendar"
+            style={[styles.dashboardItem, styles.weekCalendar]}
+          />
+          <DashboardItem
+            title="log"
+            style={[styles.dashboardItem, styles.logButton]}
+          />
+          <DashboardItem
+            title="past 7 days log"
+            style={[styles.dashboardItem, styles.pastDaysLog]}
+          />
 
           {/* Risk & Next Test Recommendations */}
           <View style={styles.infoRow}>
-            <TouchableOpacity style={[styles.infoItem, styles.riskItem]}>
+            <View style={[styles.infoItem, styles.riskItem]}>
               <ThemedText style={styles.itemText}>current risk</ThemedText>
               <ThemedText style={styles.riskText}>{riskLevel}</ThemedText>
-            </TouchableOpacity>
+            </View>
 
-            <TouchableOpacity style={[styles.infoItem, styles.nextTestItem]}>
+            <View style={[styles.infoItem, styles.nextTestItem]}>
               <ThemedText style={styles.itemText}>
                 recommended{"\n"}day for{"\n"}next test
               </ThemedText>
               <ThemedText style={styles.dateText}>
                 {formatDate(nextTestDate)}
               </ThemedText>
-            </TouchableOpacity>
+            </View>
           </View>
-
-          {/* Symptom Tracker */}
-          <TouchableOpacity
+          <DashboardItem
+            title="symptom tracker"
             style={[styles.dashboardItem, styles.symptomTracker]}
-          >
-            <ThemedText style={styles.itemText}>symptom tracker</ThemedText>
-          </TouchableOpacity>
+          />
         </ScrollView>
       </View>
-
-      {/* Overlay when drawer is open */}
       {drawerOpen && (
         <Animated.View
           style={[styles.overlay, { opacity: overlayAnim }]}
           onTouchStart={closeDrawer}
         />
       )}
-
-      {/* Drawer for profile info - now comes from bottom */}
       <Animated.View
         style={[styles.drawer, { transform: [{ translateY: drawerAnim }] }]}
       >
@@ -366,17 +351,6 @@ export default function Index() {
       </Animated.View>
     </SafeAreaView>
   );
-}
-
-function getResultBadgeStyle(result) {
-  switch (result) {
-    case "Positive":
-      return { backgroundColor: "#d32f2f" }; // Red
-    case "Negative":
-      return { backgroundColor: "#388e3c" }; // Green
-    default:
-      return { backgroundColor: "#757575" }; // Gray
-  }
 }
 
 const styles = StyleSheet.create({
