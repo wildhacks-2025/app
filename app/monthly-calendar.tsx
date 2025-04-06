@@ -1,10 +1,9 @@
-// app/FullPageCalendar.tsx
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState } from "react";
 
-import CalendarHeader from '@/components/calendar/calendar-header';
-import MonthView from '@/components/calendar/month-view';
-import { dustyRose, slate } from '@/constants/Colors';
-import { useRouter } from 'expo-router';
+import CalendarHeader from "@/components/calendar/calendar-header";
+import MonthView from "@/components/calendar/month-view";
+import { dustyRose, slate } from "@/constants/Colors";
+import { useRouter } from "expo-router";
 import {
   SafeAreaView,
   ScrollView,
@@ -13,7 +12,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
 
 const MONTHS_TO_RENDER = 12;
 
@@ -64,7 +63,7 @@ const FullPageCalendar = ({ onDateSelect, markedDates = [] }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle='dark-content' />
+      <StatusBar barStyle="dark-content" />
       <CalendarHeader
         showingMonth={showingMonth}
         setShowingMonth={setShowingMonth}
@@ -108,22 +107,22 @@ const FullPageCalendar = ({ onDateSelect, markedDates = [] }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   calendarContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
   scrollContent: {
     paddingBottom: 80,
   },
   actionButtonContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     left: 0,
     right: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     zIndex: 10,
   },
   actionButton: {
@@ -132,22 +131,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     borderRadius: 30,
     minWidth: 250,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 3,
   },
   actionButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   yearView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   yearViewText: {
     fontSize: 18,
