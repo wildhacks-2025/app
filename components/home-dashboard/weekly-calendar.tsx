@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 import {
   Animated,
   Dimensions,
@@ -8,18 +8,18 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
+} from "react-native";
 
-const cream = '#DDD5D0'; // Light cream
-const dustyRose = '#CFC0BD'; // Dusty rose
-const sage = '#B8B8AA'; // Sage green
-const forest = '#7F9183'; // Forest green
-const slate = '#586F6B'; // Slate gray
+const cream = "#DDD5D0"; // Light cream
+const dustyRose = "#CFC0BD"; // Dusty rose`
+const sage = "#B8B8AA"; // Sage green
+const forest = "#7F9183"; // Forest green
+const slate = "#586F6B"; // Slate gray
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const DAY_WIDTH = width / 7;
 
-const WeeklyCalendar = ({ onDateSelect }) => {
+const WeeklyCalendar = ({ onDateSelect, compact = false }) => {
   const today = new Date();
   const [viewDate, setViewDate] = useState(today);
   const [selectedDate, setSelectedDate] = useState(today);
@@ -35,7 +35,7 @@ const WeeklyCalendar = ({ onDateSelect }) => {
       newDate.setDate(startOfWeek.getDate() + i);
       days.push({
         day: newDate.getDate(),
-        dayName: ['S', 'M', 'T', 'W', 'T', 'F', 'S'][i],
+        dayName: ["S", "M", "T", "W", "T", "F", "S"][i],
         date: newDate,
         isToday: isToday(newDate),
         isSelected: isSameDay(newDate, selectedDate),
@@ -78,18 +78,18 @@ const WeeklyCalendar = ({ onDateSelect }) => {
 
   const getMonthText = () => {
     const monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return `${monthNames[viewDate.getMonth()]} ${viewDate.getDate()}`;
   };
@@ -103,7 +103,7 @@ const WeeklyCalendar = ({ onDateSelect }) => {
   };
 
   const goToPrevWeek = () => {
-    setSlidingDirection('right');
+    setSlidingDirection("right");
     slideAnim.setValue(width);
 
     const newViewDate = new Date(viewDate);
@@ -120,7 +120,7 @@ const WeeklyCalendar = ({ onDateSelect }) => {
   };
 
   const goToNextWeek = () => {
-    setSlidingDirection('left');
+    setSlidingDirection("left");
     slideAnim.setValue(-width);
 
     const newViewDate = new Date(viewDate);
@@ -145,52 +145,85 @@ const WeeklyCalendar = ({ onDateSelect }) => {
     }
   };
 
+  // Apply compact styling conditionally
+  const containerStyle = compact
+    ? [styles.container, styles.compactContainer]
+    : styles.container;
+
+  const dateCircleStyle = (item) => {
+    const baseStyles = [styles.dateCircle];
+
+    if (item.isSelected) {
+      baseStyles.push(styles.selectedCircle);
+    }
+
+    if (compact) {
+      baseStyles.push(styles.compactDateCircle);
+    }
+
+    return baseStyles;
+  };
+
+  const dayNameStyle = compact
+    ? [styles.dayName, styles.compactDayName]
+    : styles.dayName;
+
+  const dateTextStyle = (item) => {
+    const baseStyles = [styles.dateText];
+
+    if (item.isSelected) {
+      baseStyles.push(styles.selectedText);
+    }
+
+    if (compact) {
+      baseStyles.push(styles.compactDateText);
+    }
+
+    return baseStyles;
+  };
+
   // Render a single day
   const renderDay = (item, index) => (
     <TouchableOpacity
       key={index}
-      style={styles.dayContainer}
+      style={compact ? styles.compactDayContainer : styles.dayContainer}
       onPress={() => handleDateSelect(item.date)}
     >
-      <Text style={[styles.dayName, item.isToday ? styles.todayDayName : null]}>
-        {item.dayName}
-      </Text>
-      <View
-        style={[
-          styles.dateCircle,
-          item.isToday ? styles.todayCircle : null,
-          item.isSelected && !item.isToday ? styles.selectedCircle : null,
-        ]}
-      >
-        <Text
-          style={[
-            styles.dateText,
-            item.isToday ? styles.todayText : null,
-            item.isSelected && !item.isToday ? styles.selectedText : null,
-          ]}
-        >
-          {item.day}
-        </Text>
+      <Text style={dayNameStyle}>{item.dayName}</Text>
+
+      <View style={dateCircleStyle(item)}>
+        <Text style={dateTextStyle(item)}>{item.day}</Text>
       </View>
-      {item.isToday && <View style={styles.todayDot} />}
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={goToToday}>
-          <Text style={styles.monthText}>{getMonthText()}</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={containerStyle}>
+      {!compact && (
+        <View style={styles.header}>
+          <TouchableOpacity onPress={goToToday}>
+            <Text style={styles.monthText}>{getMonthText()}</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
-      <View style={styles.navigationContainer}>
+      <View
+        style={
+          compact
+            ? styles.compactNavigationContainer
+            : styles.navigationContainer
+        }
+      >
         <TouchableOpacity onPress={goToPrevWeek} style={styles.navButton}>
-          <Ionicons name='chevron-back' size={24} color={slate} />
+          <Ionicons
+            name="chevron-back"
+            size={compact ? 16 : 24}
+            color={slate}
+          />
         </TouchableOpacity>
 
         <View style={styles.weekContainerWrapper}>
-          {slidingDirection === 'right' && (
+          {slidingDirection === "right" && (
             <Animated.View
               style={[
                 styles.weekContainer,
@@ -201,7 +234,7 @@ const WeeklyCalendar = ({ onDateSelect }) => {
             </Animated.View>
           )}
 
-          {slidingDirection === 'left' && (
+          {slidingDirection === "left" && (
             <Animated.View
               style={[
                 styles.weekContainer,
@@ -220,7 +253,11 @@ const WeeklyCalendar = ({ onDateSelect }) => {
         </View>
 
         <TouchableOpacity onPress={goToNextWeek} style={styles.navButton}>
-          <Ionicons name='chevron-forward' size={24} color={slate} />
+          <Ionicons
+            name="chevron-forward"
+            size={compact ? 16 : 24}
+            color={slate}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -230,26 +267,56 @@ const WeeklyCalendar = ({ onDateSelect }) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: cream,
-    paddingTop: 40,
+    paddingTop: 10,
     paddingBottom: 15,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },
+  // New compact styles
+  compactContainer: {
+    paddingTop: 0,
+    paddingBottom: 0,
+    borderRadius: 15,
+    backgroundColor: "transparent",
+  },
+  compactNavigationContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: 50, // Reduced height
+  },
+  compactDayContainer: {
+    alignItems: "center",
+    padding: 0,
+    width: 22, // Make slightly narrower to fit all days
+    marginHorizontal: 1, // Add small margin between days
+  },
+  compactDayName: {
+    fontSize: 10, // Smaller font
+    marginBottom: 2,
+  },
+  compactDateCircle: {
+    width: 24, // Smaller circle
+    height: 24,
+    borderRadius: 12,
+  },
+  compactDateText: {
+    fontSize: 12,
+  },
+
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
     marginBottom: 15,
   },
   profileContainer: {
-    position: 'relative',
+    position: "relative",
   },
   profileButton: {
     padding: 5,
   },
   notificationDot: {
-    position: 'absolute',
     top: 5,
     right: 5,
     width: 10,
@@ -259,32 +326,32 @@ const styles = StyleSheet.create({
   },
   monthText: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: slate,
   },
   calendarButton: {
     padding: 5,
   },
   navigationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 5,
   },
   weekContainerWrapper: {
     flex: 1,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   weekContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
   },
   navButton: {
     padding: 8,
   },
   dayContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   dayName: {
     fontSize: 14,
@@ -292,20 +359,20 @@ const styles = StyleSheet.create({
     color: slate,
   },
   todayDayName: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: forest,
   },
   dateCircle: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 5,
   },
   todayCircle: {
     backgroundColor: forest,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
@@ -318,16 +385,16 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: "500",
     color: slate,
   },
   todayText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   selectedText: {
     color: slate,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   todayDot: {
     width: 6,
