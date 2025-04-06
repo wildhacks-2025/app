@@ -1,27 +1,28 @@
-import React from "react";
-import { LinearGradient } from "expo-linear-gradient";
+import React from 'react';
+
+import { LinearGradient } from 'expo-linear-gradient';
 import {
+  Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
-} from "react-native";
+} from 'react-native';
 
 // Color palette
-const cream = "#DDD5D0"; // Light cream
-const dustyRose = "#CFC0BD"; // Dusty rose
-const sage = "#B8B8AA"; // Sage green
-const forest = "#7F9183"; // Forest green
-const slate = "#586F6B"; // Slate gray
+const cream = '#DDD5D0'; // Light cream
+const dustyRose = '#CFC0BD'; // Dusty rose
+const sage = '#B8B8AA'; // Sage green
+const forest = '#7F9183'; // Forest green
+const slate = '#586F6B'; // Slate gray
 
-const { width } = Dimensions.get("window");
+const { width } = Dimensions.get('window');
 
 const HealthMetrics = ({ daysToEvent, eventType }) => {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={[cream, sage + "80", forest + "50"]} // Adding transparency to make gradient more subtle
+        colors={[cream, sage + '80', forest + '50']} // Adding transparency to make gradient more subtle
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={styles.gradientContainer}
@@ -30,19 +31,19 @@ const HealthMetrics = ({ daysToEvent, eventType }) => {
           <Text style={styles.titleText}>{eventType} in</Text>
           <Text style={styles.daysText}>{daysToEvent} days</Text>
           <Text style={styles.infoText}>
-            {eventType === "Ovulation"
-              ? "High chance of getting pregnant"
-              : eventType === "Testing due"
-                ? "Recommended to get tested soon"
-                : "Be prepared with supplies"}
+            {eventType === 'Ovulation'
+              ? 'High chance of getting pregnant'
+              : eventType === 'Testing due'
+                ? 'Recommended to get tested soon'
+                : 'Be prepared with supplies'}
           </Text>
           <TouchableOpacity style={styles.logButton}>
             <Text style={styles.logButtonText}>
-              {eventType === "Ovulation"
-                ? "Log period"
-                : eventType === "Testing due"
-                  ? "Log test"
-                  : "Log encounter"}
+              {eventType === 'Ovulation'
+                ? 'Log period'
+                : eventType === 'Testing due'
+                  ? 'Log test'
+                  : 'Log encounter'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -67,42 +68,42 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginHorizontal: 0,
     borderRadius: 0,
-    overflow: "hidden",
+    overflow: 'hidden',
     height: 280,
-    position: "relative",
+    position: 'relative',
   },
   gradientContainer: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
+    width: '100%',
+    height: '100%',
+    position: 'relative',
   },
   contentContainer: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
     paddingVertical: 30,
     paddingHorizontal: 20,
   },
   titleText: {
     fontSize: 24,
-    fontWeight: "500",
-    color: "#333",
+    fontWeight: '500',
+    color: '#333',
     marginBottom: 5,
   },
   daysText: {
     fontSize: 64,
-    fontWeight: "bold",
-    color: "#333",
+    fontWeight: 'bold',
+    color: '#333',
     marginVertical: 10,
   },
   infoText: {
     fontSize: 18,
-    color: "#333",
+    color: '#333',
     marginBottom: 20,
-    textAlign: "center",
+    textAlign: 'center',
   },
   logButton: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     paddingHorizontal: 30,
     paddingVertical: 12,
     borderRadius: 30,
@@ -114,22 +115,22 @@ const styles = StyleSheet.create({
   },
   logButtonText: {
     fontSize: 18,
-    fontWeight: "500",
+    fontWeight: '500',
     color: forest,
   },
   curveContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: -710,
-    width: "100%",
+    width: '100%',
     height: 750,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
   curve: {
-    position: "absolute",
+    position: 'absolute',
     width: width * 2,
     height: 750,
     borderRadius: width,
-    alignSelf: "center",
+    alignSelf: 'center',
     transform: [{ scaleX: 1 }],
     left: -width / 2,
   },
