@@ -36,10 +36,20 @@ wildhacks 2025 wellness track project
 
 ## todos
 
+- [x] onboarding flow
+- [ ] fix the css on the onboarding flow
+
 - [ ] home dashboard view
-  - [ ] display weekly calendar
+  - [x] display weekly calendar
+   - [ ] select different dates
   - [ ] display buttons to log. have it link to page to pick what you want to log
-  - [ ] display summary / from past log (past 7 days)
-  - [ ] display calculation of current risk based on logs
-  - [ ] calculate and display reccomended day for next test
-  - [ ] display summaries from sympthon tracker
+  - [ ] display summary / from past log (past 7 days) (moody)
+  - [ ] display calculation of current risk based on logs (moody)
+  - [ ] calculate and display reccomended day for next test (moody)
+  - [ ] display summaries from sympthon tracker (moody)
+
+- [ ] finding resources map (isabella)
+ - [ ] based on the users location (zip code, address, city, etc etc), find nearest / suggested clinics to get sexual health medicine from
+
+- [ ] landing page to promote app (ethan)
+  - [ ] just make something to promote the mobile application
