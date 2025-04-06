@@ -1,10 +1,19 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Alert, Dimensions, Keyboard } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useRef, useState } from 'react';
+
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
+import {
+  Alert,
+  Dimensions,
+  Keyboard,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Clinic = {
   id: string;
@@ -24,7 +33,7 @@ export default function ExploreScreen() {
   const [zipcode, setZipcode] = useState<string>('10001');
   const [region, setRegion] = useState<Region>({
     latitude: 40.7128,
-    longitude: -74.0060,
+    longitude: -74.006,
     latitudeDelta: 0.0422,
     longitudeDelta: 0.0221,
   });
@@ -54,7 +63,10 @@ export default function ExploreScreen() {
       const placesData = await placesResponse.json();
 
       if (placesData.results.length === 0) {
-        Alert.alert('No Clinics Found', `No clinics found near ZIP code ${zipcode}.`);
+        Alert.alert(
+          'No Clinics Found',
+          `No clinics found near ZIP code ${zipcode}.`
+        );
         return;
       }
 
@@ -103,12 +115,12 @@ export default function ExploreScreen() {
       <View style={[styles.searchContainer, { paddingTop: insets.top + 10 }]}>
         <TextInput
           style={styles.input}
-          placeholder="Enter ZIP Code"
+          placeholder='Enter ZIP Code'
           value={zipcode}
           onChangeText={setZipcode}
-          keyboardType="numeric"
+          keyboardType='numeric'
           maxLength={5}
-          placeholderTextColor="#999"
+          placeholderTextColor='#999'
         />
         <TouchableOpacity style={styles.button} onPress={handleSearch}>
           <ThemedText style={styles.buttonText}>Search</ThemedText>
@@ -116,21 +128,18 @@ export default function ExploreScreen() {
       </View>
 
       {/* map */}
-      <MapView 
-        ref={mapRef}
-        style={styles.map} 
-        region={region}
-      >
-        {clinics.map((clinic) => (
-          clinic.coordinate && (
-            <Marker
-              key={clinic.id}
-              coordinate={clinic.coordinate}
-              title={clinic.name}
-              description={clinic.address}
-            />
-          )
-        ))}
+      <MapView ref={mapRef} style={styles.map} region={region}>
+        {clinics.map(
+          (clinic) =>
+            clinic.coordinate && (
+              <Marker
+                key={clinic.id}
+                coordinate={clinic.coordinate}
+                title={clinic.name}
+                description={clinic.address}
+              />
+            )
+        )}
       </MapView>
     </ThemedView>
   );
@@ -180,5 +189,5 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
-  }
+  },
 });
