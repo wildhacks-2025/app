@@ -48,8 +48,8 @@ wildhacks 2025 wellness track project
   - [ ] calculate and display reccomended day for next test (moody)
   - [ ] display summaries from sympthon tracker (moody)
 
-- [ ] finding resources map (isabella)
- - [ ] based on the users location (zip code, address, city, etc etc), find nearest / suggested clinics to get sexual health medicine from
+- [x] finding resources map (isabella)
+ - [x] based on the users location (zip code, address, city, etc etc), find nearest / suggested clinics to get sexual health medicine from
 
 - [ ] landing page to promote app (ethan)
   - [ ] just make something to promote the mobile application
