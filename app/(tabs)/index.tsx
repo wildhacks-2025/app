@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-
 import { useOnboarding } from '@/app/context/onboarding-context';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import DashboardItem from '@/components/home-dashboard/dashboard-item';
 import WeeklyCalendar from '@/components/home-dashboard/weekly-calendar';
+import MonthlyCalendar from '@/app/(tabs)/monthly-calendar';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Redirect } from 'expo-router';
@@ -36,6 +36,9 @@ export default function Index() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerAnim = useRef(new Animated.Value(DRAWER_HEIGHT)).current;
   const overlayAnim = useRef(new Animated.Value(0)).current;
+
+  // New state to toggle between weekly and monthly calendar views.
+  const [calendarView, setCalendarView] = useState('weekly');
 
   const [logData] = useState([
     {
@@ -186,17 +189,44 @@ export default function Index() {
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle='dark-content' backgroundColor={cream} />
       <View style={styles.container}>
+        {/* Header with drawer menu, welcome text, and calendar toggle button */}
         <View style={styles.header}>
           <TouchableOpacity onPress={openDrawer} style={styles.menuButton}>
             <Ionicons name='person-circle-outline' size={28} color={slate} />
           </TouchableOpacity>
-          <ThemedText style={styles.welcomeText}>Hello, {data.name}</ThemedText>
+          <View style={styles.headerCenter}>
+            <ThemedText style={styles.welcomeText}>
+              Hello, {data.name}
+            </ThemedText>
+            <TouchableOpacity
+              onPress={() =>
+                setCalendarView((prev) =>
+                  prev === 'weekly' ? 'monthly' : 'weekly'
+                )
+              }
+              style={styles.calendarToggleButton}
+            >
+              {/* Change icon based on current view */}
+              <Ionicons
+                name={calendarView === 'weekly' ? 'calendar' : 'calendar-outline'}
+                size={28}
+                color={slate}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <ScrollView style={styles.scrollContainer}>
-          <WeeklyCalendar
-            onDateSelect={(date) => console.log('Selected date:', date)}
-          />
+          {/* Conditionally render WeeklyCalendar or MonthlyCalendar */}
+          {calendarView === 'weekly' ? (
+            <WeeklyCalendar
+              onDateSelect={(date) => console.log('Selected date:', date)}
+            />
+          ) : (
+            <MonthlyCalendar
+              onDateSelect={(date) => console.log('Selected date:', date)}
+            />
+          )}
 
           <DashboardItem
             title='log'
@@ -380,10 +410,20 @@ const styles = StyleSheet.create({
     padding: 8,
     marginRight: 16,
   },
+  // New style for the center header row containing welcome text and calendar toggle
+  headerCenter: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   welcomeText: {
     fontSize: 24,
     fontWeight: 'bold',
     color: slate,
+  },
+  calendarToggleButton: {
+    padding: 8,
   },
   scrollContainer: {
     padding: 16,
