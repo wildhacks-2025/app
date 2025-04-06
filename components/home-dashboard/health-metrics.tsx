@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import {
   Dimensions,
   StyleSheet,
@@ -19,6 +20,11 @@ const slate = '#586F6B'; // Slate gray
 const { width } = Dimensions.get('window');
 
 const HealthMetrics = ({ daysToEvent, eventType }) => {
+  const router = useRouter();
+  const goToLogEvent = () => {
+    router.push('/log-entry');
+  };
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -37,14 +43,8 @@ const HealthMetrics = ({ daysToEvent, eventType }) => {
                 ? 'Recommended to get tested soon'
                 : 'Be prepared with supplies'}
           </Text>
-          <TouchableOpacity style={styles.logButton}>
-            <Text style={styles.logButtonText}>
-              {eventType === 'Ovulation'
-                ? 'Log period'
-                : eventType === 'Testing due'
-                  ? 'Log test'
-                  : 'Log encounter'}
-            </Text>
+          <TouchableOpacity style={styles.logButton} onPress={goToLogEvent}>
+            <Text style={styles.logButtonText}>Log Entry</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>

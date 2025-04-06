@@ -20,6 +20,7 @@ export default function RootLayout() {
           <Stack.Screen name='onboarding' />
           <Stack.Screen name='(tabs)' />
           <Stack.Screen name='monthly-calendar' />
+          <Stack.Screen name='log-entry' />
         </Stack>
       </OnboardingProvider>
     </GestureHandlerRootView>
