@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useOnboarding } from '@/app/context/onboarding-context';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import DashboardItem from '@/components/home-dashboard/dashboard-item';
-import WeeklyCalendar from '@/components/home-dashboard/weekly-calendar';
-import MonthlyCalendar from '@/app/(tabs)/monthly-calendar';
-import { Ionicons } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Redirect } from 'expo-router';
+import React, { useEffect, useRef, useState } from "react";
+import { useOnboarding } from "@/app/context/onboarding-context";
+import { ThemedText } from "@/components/ThemedText";
+import { ThemedView } from "@/components/ThemedView";
+import DashboardItem from "@/components/home-dashboard/dashboard-item";
+import WeeklyCalendar from "@/components/home-dashboard/weekly-calendar";
+import HealthMetrics from "@/components/home-dashboard/health-metrics"; // Import the HealthMetrics component
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Redirect, router } from "expo-router";
 import {
   Animated,
   Dimensions,
@@ -36,8 +36,7 @@ export default function Index() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerAnim = useRef(new Animated.Value(DRAWER_HEIGHT)).current;
   const overlayAnim = useRef(new Animated.Value(0)).current;
-  // New state to toggle between weekly and monthly calendar views.
-  const [calendarView, setCalendarView] = useState('weekly');
+
   // Determine which health metric to show based on data
   const [healthMetricType, setHealthMetricType] = useState("Testing due");
   const [daysToEvent, setDaysToEvent] = useState(3);
@@ -65,6 +64,7 @@ export default function Index() {
       }
     }
   }, [data.lastTestedDate]);
+
   const [logData] = useState([
     {
       id: "1",
@@ -90,6 +90,12 @@ export default function Index() {
     return new Date();
   });
   const [riskLevel] = useState("Low");
+
+  // Function to handle calendar button press and navigate to the monthly calendar screen
+  const handleCalendarPress = () => {
+    console.log("Calendar button pressed");
+    router.push("/monthly-calendar");
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -212,46 +218,6 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <StatusBar barStyle='dark-content' backgroundColor={cream} />
-      <View style={styles.container}>
-        {/* Header with drawer menu, welcome text, and calendar toggle button */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={openDrawer} style={styles.menuButton}>
-            <Ionicons name='person-circle-outline' size={28} color={slate} />
-          </TouchableOpacity>
-          <View style={styles.headerCenter}>
-            <ThemedText style={styles.welcomeText}>
-              Hello, {data.name}
-            </ThemedText>
-            <TouchableOpacity
-              onPress={() =>
-                setCalendarView((prev) =>
-                  prev === 'weekly' ? 'monthly' : 'weekly'
-                )
-              }
-              style={styles.calendarToggleButton}
-            >
-              {/* Change icon based on current view */}
-              <Ionicons
-                name={calendarView === 'weekly' ? 'calendar' : 'calendar-outline'}
-                size={28}
-                color={slate}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <ScrollView style={styles.scrollContainer}>
-          {/* Conditionally render WeeklyCalendar or MonthlyCalendar */}
-          {calendarView === 'weekly' ? (
-            <WeeklyCalendar
-              onDateSelect={(date) => console.log('Selected date:', date)}
-            />
-          ) : (
-            <MonthlyCalendar
-              onDateSelect={(date) => console.log('Selected date:', date)}
-            />
-          )}
       <StatusBar barStyle="dark-content" backgroundColor={cream} />
 
       {/* Using a single ScrollView for the whole content */}
@@ -265,6 +231,13 @@ export default function Index() {
             <ThemedText style={styles.welcomeText}>
               Hello, {data.name}
             </ThemedText>
+            {/* New Calendar Button */}
+            <TouchableOpacity
+              onPress={handleCalendarPress}
+              style={styles.calendarButton}
+            >
+              <Ionicons name="calendar" size={28} color={slate} />
+            </TouchableOpacity>
           </View>
 
           {/* Calendar below the header row */}
@@ -275,18 +248,27 @@ export default function Index() {
           </View>
         </View>
 
+        {/* Health Metrics Card */}
         <HealthMetrics daysToEvent={daysToEvent} eventType={healthMetricType} />
+
+        {/* Dashboard Content */}
         <View style={styles.dashboardContent}>
-          {" "}
+          <DashboardItem
+            title="log"
+            style={[styles.dashboardItem, styles.logButton]}
+          />
           <DashboardItem
             title="past 7 days log"
             style={[styles.dashboardItem, styles.pastDaysLog]}
           />
+
+          {/* Risk & Next Test Recommendations */}
           <View style={styles.infoRow}>
             <View style={[styles.infoItem, styles.riskItem]}>
               <ThemedText style={styles.itemText}>current risk</ThemedText>
               <ThemedText style={styles.riskText}>{riskLevel}</ThemedText>
             </View>
+
             <View style={[styles.infoItem, styles.nextTestItem]}>
               <ThemedText style={styles.itemText}>
                 recommended{"\n"}day for{"\n"}next test
@@ -302,6 +284,8 @@ export default function Index() {
           />
         </View>
       </ScrollView>
+
+      {/* Drawer and overlay remain unchanged */}
       {drawerOpen && (
         <Animated.View
           style={[styles.overlay, { opacity: overlayAnim }]}
@@ -311,6 +295,7 @@ export default function Index() {
       <Animated.View
         style={[styles.drawer, { transform: [{ translateY: drawerAnim }] }]}
       >
+        {/* Drawer content remains unchanged */}
         <View style={styles.drawerHandle} />
         <View style={styles.drawerHeader}>
           <ThemedText style={styles.drawerTitle}>Your Profile</ThemedText>
@@ -318,29 +303,35 @@ export default function Index() {
             <Ionicons name="close" size={24} color={slate} />
           </TouchableOpacity>
         </View>
+
         <ScrollView style={styles.drawerContent}>
           <ThemedView style={styles.card}>
             <ThemedText style={styles.cardTitle}>Personal Info</ThemedText>
+
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Name:</ThemedText>
               <ThemedText style={styles.value}>{data.name}</ThemedText>
             </View>
+
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Age:</ThemedText>
               <ThemedText style={styles.value}>{data.age} years old</ThemedText>
             </View>
+
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Sex:</ThemedText>
               <ThemedText style={styles.value}>
                 {formatSex(data.sex)}
               </ThemedText>
             </View>
+
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Sexual Orientation:</ThemedText>
               <ThemedText style={styles.value}>
                 {formatOrientation(data.orientation)}
               </ThemedText>
             </View>
+
             <View style={styles.profileItem}>
               <ThemedText style={styles.label}>Last Tested:</ThemedText>
               <ThemedText style={styles.value}>
@@ -350,6 +341,7 @@ export default function Index() {
               </ThemedText>
             </View>
           </ThemedView>
+
           {data.chronicConditions && data.chronicConditions.length > 0 && (
             <ThemedView style={styles.card}>
               <ThemedText style={styles.cardTitle}>
@@ -374,6 +366,7 @@ export default function Index() {
               )}
             </ThemedView>
           )}
+
           {data.medications && data.medications.length > 0 && (
             <ThemedView style={styles.card}>
               <ThemedText style={styles.cardTitle}>
@@ -388,6 +381,7 @@ export default function Index() {
               ))}
             </ThemedView>
           )}
+
           {data.testHistory && Object.keys(data.testHistory).length > 0 && (
             <ThemedView style={styles.card}>
               <ThemedText style={styles.cardTitle}>Testing History</ThemedText>
@@ -446,27 +440,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 0,
+    justifyContent: "space-between", // Space out items in the header row
   },
   menuButton: {
     padding: 6,
   },
-  // New style for the center header row containing welcome text and calendar toggle
-  headerCenter: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  // New calendar button style
+  calendarButton: {
+    padding: 6,
   },
   welcomeText: {
     fontSize: 24,
     fontWeight: "bold",
     color: slate,
+    flex: 1,
     marginLeft: 8,
   },
-  calendarToggleButton: {
-    padding: 8,
-  },
-  scrollContainer: {
   calendarContainer: {
     width: "100%",
     marginTop: -8,
