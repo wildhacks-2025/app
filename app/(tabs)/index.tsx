@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useOnboarding } from "@/app/context/onboarding-context";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import DashboardItem from "@/components/home-dashboard/dashboard-item";
-import WeeklyCalendar from "@/components/home-dashboard/weekly-calendar";
-import HealthMetrics from "@/components/home-dashboard/health-metrics"; // Import the HealthMetrics component
-import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Redirect } from "expo-router";
+import React, { useEffect, useRef, useState } from 'react';
+import { useOnboarding } from '@/app/context/onboarding-context';
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import DashboardItem from '@/components/home-dashboard/dashboard-item';
+import WeeklyCalendar from '@/components/home-dashboard/weekly-calendar';
+import MonthlyCalendar from '@/app/(tabs)/monthly-calendar';
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Redirect } from 'expo-router';
 import {
   Animated,
   Dimensions,
@@ -36,7 +36,8 @@ export default function Index() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerAnim = useRef(new Animated.Value(DRAWER_HEIGHT)).current;
   const overlayAnim = useRef(new Animated.Value(0)).current;
-
+  // New state to toggle between weekly and monthly calendar views.
+  const [calendarView, setCalendarView] = useState('weekly');
   // Determine which health metric to show based on data
   const [healthMetricType, setHealthMetricType] = useState("Testing due");
   const [daysToEvent, setDaysToEvent] = useState(3);
@@ -64,7 +65,6 @@ export default function Index() {
       }
     }
   }, [data.lastTestedDate]);
-
   const [logData] = useState([
     {
       id: "1",
@@ -212,6 +212,46 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar barStyle='dark-content' backgroundColor={cream} />
+      <View style={styles.container}>
+        {/* Header with drawer menu, welcome text, and calendar toggle button */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={openDrawer} style={styles.menuButton}>
+            <Ionicons name='person-circle-outline' size={28} color={slate} />
+          </TouchableOpacity>
+          <View style={styles.headerCenter}>
+            <ThemedText style={styles.welcomeText}>
+              Hello, {data.name}
+            </ThemedText>
+            <TouchableOpacity
+              onPress={() =>
+                setCalendarView((prev) =>
+                  prev === 'weekly' ? 'monthly' : 'weekly'
+                )
+              }
+              style={styles.calendarToggleButton}
+            >
+              {/* Change icon based on current view */}
+              <Ionicons
+                name={calendarView === 'weekly' ? 'calendar' : 'calendar-outline'}
+                size={28}
+                color={slate}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <ScrollView style={styles.scrollContainer}>
+          {/* Conditionally render WeeklyCalendar or MonthlyCalendar */}
+          {calendarView === 'weekly' ? (
+            <WeeklyCalendar
+              onDateSelect={(date) => console.log('Selected date:', date)}
+            />
+          ) : (
+            <MonthlyCalendar
+              onDateSelect={(date) => console.log('Selected date:', date)}
+            />
+          )}
       <StatusBar barStyle="dark-content" backgroundColor={cream} />
 
       {/* Using a single ScrollView for the whole content */}
@@ -431,12 +471,23 @@ const styles = StyleSheet.create({
   menuButton: {
     padding: 6,
   },
+  // New style for the center header row containing welcome text and calendar toggle
+  headerCenter: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   welcomeText: {
     fontSize: 24,
     fontWeight: "bold",
     color: slate,
     marginLeft: 8,
   },
+  calendarToggleButton: {
+    padding: 8,
+  },
+  scrollContainer: {
   calendarContainer: {
     width: "100%",
     marginTop: -8,
