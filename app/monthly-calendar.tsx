@@ -91,7 +91,7 @@ const FullPageCalendar = ({ onDateSelect, markedDates = [] }) => {
           </ScrollView>
           <View style={styles.actionButtonContainer}>
             <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.actionButtonText}>Edit period dates</Text>
+              <Text style={styles.actionButtonText}>Enter a log</Text>
             </TouchableOpacity>
           </View>
         </View>
