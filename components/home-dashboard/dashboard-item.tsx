@@ -1,6 +1,7 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { ThemedText } from "@/components/ThemedText";
+import React from 'react';
+
+import { ThemedText } from '@/components/ThemedText';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 
 type DashboardItemProps = {
   title: string;
@@ -31,13 +32,13 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     marginBottom: 16,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   itemText: {
     fontSize: 20,
-    fontWeight: "600",
-    color: "black",
-    textAlign: "center",
+    fontWeight: '600',
+    color: 'black',
+    textAlign: 'center',
   },
 });

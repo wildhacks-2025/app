@@ -1,24 +1,25 @@
-import React from "react";
+import React from 'react';
+
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
+import { formatDate, formatOrientation, formatSex } from '@/utils/formatters';
+import { Ionicons } from '@expo/vector-icons';
 import {
-  StyleSheet,
-  View,
-  ScrollView,
-  TouchableOpacity,
   Animated,
   Dimensions,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { formatDate, formatSex, formatOrientation } from "@/utils/formatters";
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-const cream = "#DDD5D0"; // Light cream
-const dustyRose = "#CFC0BD"; // Dusty rose
-const forest = "#7F9183"; // Forest green
-const slate = "#586F6B"; // Slate gray
-const sage = "#B8B8AA"; // Sage green
+const cream = '#DDD5D0'; // Light cream
+const dustyRose = '#CFC0BD'; // Dusty rose
+const forest = '#7F9183'; // Forest green
+const slate = '#586F6B'; // Slate gray
+const sage = '#B8B8AA'; // Sage green
 
-const { height } = Dimensions.get("window");
+const { height } = Dimensions.get('window');
 const DRAWER_HEIGHT = height * 0.9;
 
 type ProfileDrawerProps = {
@@ -36,12 +37,12 @@ export default function ProfileDrawer({
 }: ProfileDrawerProps) {
   function getResultBadgeStyle(result) {
     switch (result) {
-      case "Positive":
-        return { backgroundColor: "#d32f2f" }; // Red
-      case "Negative":
-        return { backgroundColor: "#388e3c" }; // Green
+      case 'Positive':
+        return { backgroundColor: '#d32f2f' }; // Red
+      case 'Negative':
+        return { backgroundColor: '#388e3c' }; // Green
       default:
-        return { backgroundColor: "#757575" }; // Gray
+        return { backgroundColor: '#757575' }; // Gray
     }
   }
 
@@ -53,7 +54,7 @@ export default function ProfileDrawer({
       <View style={styles.drawerHeader}>
         <ThemedText style={styles.drawerTitle}>Your Profile</ThemedText>
         <TouchableOpacity onPress={onClose}>
-          <Ionicons name="close" size={24} color={slate} />
+          <Ionicons name='close' size={24} color={slate} />
         </TouchableOpacity>
       </View>
 
@@ -92,7 +93,7 @@ export default function ProfileDrawer({
             <ThemedText style={styles.value}>
               {userData.lastTestedDate
                 ? formatDate(new Date(userData.lastTestedDate))
-                : "Never tested"}
+                : 'Never tested'}
             </ThemedText>
           </View>
         </ThemedView>
@@ -162,7 +163,7 @@ export default function ProfileDrawer({
                       {formatDate(new Date(info.date))}
                     </ThemedText>
                   </View>
-                ),
+                )
               )}
             </ThemedView>
           )}
@@ -173,7 +174,7 @@ export default function ProfileDrawer({
 
 const styles = StyleSheet.create({
   drawer: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 10,
     elevation: 15,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -194,13 +195,13 @@ const styles = StyleSheet.create({
     height: 5,
     backgroundColor: slate,
     borderRadius: 3,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 10,
   },
   drawerHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 20,
     paddingBottom: 10,
     borderBottomWidth: 1,
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
   },
   drawerTitle: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: forest,
   },
   drawerContent: {
@@ -218,8 +219,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    backgroundColor: "#FFFFFF",
-    shadowColor: "#000",
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -227,20 +228,20 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 16,
     color: forest,
   },
   profileItem: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 12,
     paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#f0f0f0",
+    borderBottomColor: '#f0f0f0',
   },
   label: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     width: 150,
     color: slate,
   },
@@ -259,12 +260,12 @@ const styles = StyleSheet.create({
   otherDetails: {
     marginTop: 12,
     padding: 12,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: '#f8f8f8',
     borderRadius: 8,
   },
   otherDetailsLabel: {
     fontSize: 14,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 4,
     color: slate,
   },
@@ -273,20 +274,20 @@ const styles = StyleSheet.create({
     color: slate,
   },
   testItem: {
-    backgroundColor: sage + "33",
+    backgroundColor: sage + '33',
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
   },
   testHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 4,
   },
   testName: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     color: slate,
   },
   resultBadge: {
@@ -295,9 +296,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   resultText: {
-    color: "white",
+    color: 'white',
     fontSize: 12,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   testDate: {
     fontSize: 14,

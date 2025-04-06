@@ -1,5 +1,6 @@
-import React, { ReactNode, useRef, useEffect } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import React, { ReactNode, useEffect, useRef } from 'react';
+
+import { Animated, StyleSheet, View } from 'react-native';
 
 type BottomDrawerProps = {
   isOpen: boolean;
@@ -17,7 +18,7 @@ export default function BottomDrawer({
   onClose,
   children,
   height = height * 0.9,
-  backgroundColor = "#fff",
+  backgroundColor = '#fff',
 }: BottomDrawerProps) {
   const drawerAnim = useRef(new Animated.Value(height)).current;
   const overlayAnim = useRef(new Animated.Value(0)).current;
@@ -79,15 +80,15 @@ export default function BottomDrawer({
 
 const styles = StyleSheet.create({
   overlay: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: "black",
+    backgroundColor: 'black',
   },
   drawer: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 10,
     elevation: 15,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
@@ -104,9 +105,9 @@ const styles = StyleSheet.create({
   drawerHandle: {
     width: 40,
     height: 5,
-    backgroundColor: "#999",
+    backgroundColor: '#999',
     borderRadius: 3,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginBottom: 10,
   },
 });

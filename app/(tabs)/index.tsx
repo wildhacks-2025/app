@@ -17,6 +17,7 @@ import { Redirect } from "expo-router";
 import { ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import DashboardItem from "@/components/home-dashboard/dashboard-item";
+import WeeklyCalendar from "@/components/home-dashboard/weekly-calendar";
 
 const cream = "#DDD5D0"; // Light cream
 const dustyRose = "#CFC0BD"; // Dusty rose
@@ -192,10 +193,10 @@ export default function Index() {
         </View>
 
         <ScrollView style={styles.scrollContainer}>
-          <DashboardItem
-            title="week calendar"
-            style={[styles.dashboardItem, styles.weekCalendar]}
+          <WeeklyCalendar
+            onDateSelect={(date) => console.log("Selected date:", date)}
           />
+
           <DashboardItem
             title="log"
             style={[styles.dashboardItem, styles.logButton]}
@@ -558,7 +559,7 @@ const styles = StyleSheet.create({
     color: slate,
   },
   testItem: {
-    backgroundColor: sage + "33", // Adding transparency
+    backgroundColor: sage + "33",
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
